@@ -17,7 +17,7 @@
  */
 function addRandomGreeting() {
   const greetings =
-      ['Hello world!', '¡Hola Mundo!', '你好，世界！', 'Bonjour le monde!'];
+      ['Gone Now by Bleachers', 'Malibu Nights by LANY', 'Melodrama by Lorde','After Hours by The Weeknd', 'American Teen by Khalid'];
 
   // Pick a random greeting.
   const greeting = greetings[Math.floor(Math.random() * greetings.length)];
