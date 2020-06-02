@@ -14,6 +14,7 @@
 
 package com.google.sps.servlets;
 
+import com.google.sps.data.Comment;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -22,22 +23,31 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import com.google.gson.Gson;
 
-/** Servlet that returns some example content. TODO: modify this file to handle comments data */
-@WebServlet("/data")
+/** Servlet that returns some example content.*/
+@WebServlet("/comments")
 public class DataServlet extends HttpServlet {
+  private ArrayList<Comment> commentsData = new ArrayList<Comment>();
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    ArrayList<String> data = new ArrayList<String>();
-    data.add("Google");
-    data.add("Youtube");
-    data.add("Android");
-
     Gson gson = new Gson();
-    String json = gson.toJson(data);
+    String json = gson.toJson(commentsData);
 
-    response.setContentType("text/html;");
-    //  response.getWriter().println("<h1>Hello Carmen!</h1>");
+    response.setContentType("application/json");
     response.getWriter().println(json);
+  }
+
+
+  @Override
+  public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    String name = request.getParameter("name-input");
+    String comment = request.getParameter("comment-input");
+    
+    // Add current comment to commentsData
+    Comment currentComment = new Comment(name, comment);
+    commentsData.add(currentComment);
+
+    // Redirect back to the HTML page.
+    response.sendRedirect("/contact_me.html");
   }
 }

@@ -56,26 +56,27 @@ function addRandomActivity() {
 }
 
 
-async function getHelloName() {
-  const response = await fetch('/data');
-  const quote = await response.json();
-/*  const quote = await response.text();*/
-
-
-  const quoteListElement = document.getElementById('hello-world-container');
-  quoteListElement.innerHTML = '';
-  quoteListElement.appendChild(
-      createListElement('Item 1: ' + quote[0]));
-  quoteListElement.appendChild(
-      createListElement('Item 2: ' + quote[1]));
-  quoteListElement.appendChild(
-      createListElement('Item 3: ' + quote[2]));
-}
-
-
 /** Creates an <li> element containing text. */
 function createListElement(text) {
   const liElement = document.createElement('li');
   liElement.innerText = text;
   return liElement;
+}
+
+
+// Gets previous comments and loads them, formatted, to page
+function getComments() {
+  fetch('/comments').then(response => response.json()).then((commentsData) => {
+    console.log(commentsData);
+    const commentsContainer = document.getElementById('comments-container');
+
+    let i;
+    let commentsText = "";
+    for (i = 0; i < commentsData.length; i++) {
+      commentsText += "<strong>" + commentsData[i].name + "</strong> " +
+          commentsData[i].commentText + "<br>";
+    }
+
+    commentsContainer.innerHTML = commentsText;
+  });
 }
