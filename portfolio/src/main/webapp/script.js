@@ -54,3 +54,28 @@ function addRandomActivity() {
   const activityPhotoItem = document.getElementById("activity-photo");
   activityPhotoItem.setAttribute("src",activityPhoto);
 }
+
+
+async function getHelloName() {
+  const response = await fetch('/data');
+  const quote = await response.json();
+/*  const quote = await response.text();*/
+
+
+  const quoteListElement = document.getElementById('hello-world-container');
+  quoteListElement.innerHTML = '';
+  quoteListElement.appendChild(
+      createListElement('Item 1: ' + quote[0]));
+  quoteListElement.appendChild(
+      createListElement('Item 2: ' + quote[1]));
+  quoteListElement.appendChild(
+      createListElement('Item 3: ' + quote[2]));
+}
+
+
+/** Creates an <li> element containing text. */
+function createListElement(text) {
+  const liElement = document.createElement('li');
+  liElement.innerText = text;
+  return liElement;
+}
