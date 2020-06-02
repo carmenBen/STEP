@@ -26,7 +26,7 @@ function addRandomActivity() {
   ];
 
   const activityDescriptions = [
-    'You\'ve seen it all over instagram, now is the time to learn to bake banana bread! I recommend Bon Appetits recipe(linked below), which I have been guilty of making multiple times in a week(enjoy the picture of my latest loaf below!).',
+    'You\'ve seen it all over instagram, now is the time to learn to bake banana bread! I recommend Bon Appetits recipe(linked below), which I have been guilty of making multiple times in a week(enjoy the picture of my latest loaf above!).',
     'Listen to an entire album. Yes, I mean start to finish! When will you have the chance to after this? Some recommendations include \'Fine Line\' by Harry Styles, \'After Hours\' by The Weeknd, and \'Melodrama\' by Lorde.',
     'A personal favorite choice, now is the time to start a group call with friends and watch (or rewatch!) a romcom. Some recommendations include \'The Half of It,\' \'Someone Great,\' \'Clueless,\' and \'10 Things I Hate About You.\'',
     'zzz',
