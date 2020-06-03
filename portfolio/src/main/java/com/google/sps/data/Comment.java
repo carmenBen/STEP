@@ -1,6 +1,6 @@
 package com.google.sps.data;
 
-/** Class containing comments information. */
+/** An item containing comment text and name */
 public final class Comment {
 
   private final String name;
@@ -9,13 +9,5 @@ public final class Comment {
   public Comment(String name, String commentText) {
     this.name = name;
     this.commentText = commentText;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public String getCommentText() {
-    return commentText;
   }
 }
