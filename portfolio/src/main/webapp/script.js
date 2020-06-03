@@ -65,8 +65,8 @@ function createListElement(text) {
 
 
 // Gets previous comments and loads them, formatted, to page
-function getComments() {
-  fetch('/comments').then(response => response.json()).then((commentsData) => {
+function getComments(maxComments) {
+  fetch('/comments?max='+maxComments).then(response => response.json()).then((commentsData) => {
     console.log(commentsData);
     const commentsContainer = document.getElementById('comments-container');
 
@@ -79,4 +79,8 @@ function getComments() {
 
     commentsContainer.innerHTML = commentsText;
   });
+}
+
+function changeCommentNumber() {
+    getComments(document.getElementById("comment-number").value);
 }

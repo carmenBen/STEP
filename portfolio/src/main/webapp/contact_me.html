@@ -9,7 +9,7 @@
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js" ></script>
     <script src="script.js"></script>
   </head>
-  <body onload="getComments()">
+  <body onload="getComments(5)">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <a class="navbar-brand" href="index.html">Home</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -50,6 +50,12 @@
         <br>
         <strong>Comments:</strong><br>
         <div id="comments-container"></div>
+        <label for="comment-number">Number of Comments to Display</label>
+        <select name="comment-number" id="comment-number" onchange="changeCommentNumber()">
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="15">15</option>
+        </select>
       </div>
     </div>
   </body>
