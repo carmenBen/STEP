@@ -15,8 +15,7 @@
 /**
  * Adds a random activity card to the page. These are descriptions and images of random quarantine activities.
  */
-function addRandomActivity() {
-  console.log("here1");
+function addActivity() {
   const activityTitles = [
     'Bake Banana Bread!',
     'Listen to an Album!',
@@ -41,7 +40,7 @@ function addRandomActivity() {
     'images/reading.JPG',
   ];
 
-  // Pick a random activity to display.
+  // Pick an activity to display.
   const index = Math.floor(Math.random() * activityTitles.length);
   const activityTitle = activityTitles[index];
   const activityDescription = activityDescriptions[index];
