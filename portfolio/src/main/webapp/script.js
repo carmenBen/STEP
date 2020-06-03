@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/*
+/**
  * Adds a random activity card to the page. These are descriptions and images of random quarantine activities.
  */
 function addRandomActivity() {
