@@ -1,9 +1,8 @@
-#content {
-  margin-left: auto;
-  margin-right: auto;
-  width: 650px;
+#activity-title-container {
+  font-weight: bolder;
 }
 
-#album-container {
-  margin-top: 20px;
+.img-fluid-main {
+  height: auto;
+  max-width: 80%;
 }
