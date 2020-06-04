@@ -55,32 +55,63 @@ function addRandomActivity() {
   activityPhotoItem.setAttribute("src",activityPhoto);
 }
 
-
-/** Creates an <li> element containing text. */
-function createListElement(text) {
-  const liElement = document.createElement('li');
-  liElement.innerText = text;
-  return liElement;
-}
-
-
 // Gets previous comments and loads them, formatted, to page
-function getComments(maxComments) {
+function getComments(maxComments = 5) {
   fetch('/comments?max='+maxComments).then(response => response.json()).then((commentsData) => {
-    console.log(commentsData);
-    const commentsContainer = document.getElementById('comments-container');
+    const commentsContainer = document.getElementById('comments-list-container');
+    commentsContainer.innerHTML = '';
 
-    let i;
-    let commentsText = "";
-    for (i = 0; i < commentsData.length; i++) {
-      commentsText += "<strong>" + commentsData[i].name + "</strong> " +
-          commentsData[i].commentText + "<br>";
+    if (commentsData.length == 0){
+        commentsContainer.innerHTML = 'No comments currently. Comment now!';
     }
+    else {
+      let i;
+      let commentsText = '';
 
-    commentsContainer.innerHTML = commentsText;
+      for (i = 0; i < commentsData.length; i++) {
+        const commentEl = createCommentElement(commentsData[i].name, commentsData[i].commentText);
+        commentsContainer.appendChild(commentEl);
+      }
+    }
   });
 }
 
+// Updates max number of comments shown when number is chosen on drop down
 function changeCommentNumber() {
-    getComments(document.getElementById("comment-number").value);
+    getComments(document.getElementById('comment-number').value);
+}
+
+
+// Deletes all commments when delete comment button pressed
+function deleteComments() {
+    fetch('/delete-data', {method: 'POST'}).then(window.location.reload(true));
+}
+
+// creates list element of media type from Bootstrap formatting for comments
+function createCommentElement(name, commentText) {
+  const liElement = document.createElement('li');
+  liElement.setAttribute('class','media mt-3');
+
+  const imgElement = document.createElement('img');
+  imgElement.setAttribute('class', 'mr-3');
+  imgElement.setAttribute('height', '64');
+  imgElement.setAttribute('width', '64');
+  imgElement.src ='images/profile.png';
+  liElement.appendChild(imgElement);  
+
+  const divElement = document.createElement("div"); 
+  divElement.setAttribute('class','media-body');
+  liElement.appendChild(divElement);  
+
+  const headerElement = document.createElement("h5"); 
+  headerElement.setAttribute('class','mt-0 mb-1');
+  divElement.appendChild(headerElement);  
+
+  nameNode = document.createTextNode(name); 
+  headerElement.appendChild(nameNode);  
+
+  commentTextNode = document.createTextNode(commentText); 
+  divElement.appendChild(commentTextNode);  
+
+  return liElement;
 }

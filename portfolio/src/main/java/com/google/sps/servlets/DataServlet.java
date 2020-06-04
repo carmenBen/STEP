@@ -32,13 +32,12 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.FetchOptions;
 
-/** Servlet that returns some example content.*/
+/** Servlet that returns comments and adds comments.*/
 @WebServlet("/comments")
 public class DataServlet extends HttpServlet {
-  private ArrayList<Comment> commentsData = new ArrayList<Comment>();
-
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    // Obtain requested comments from datastore
     String maxString = request.getParameter("max");
     Integer maxInt = Integer.parseInt(maxString);
 
@@ -47,6 +46,7 @@ public class DataServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
 
+    // Loop through comments and then send as json to page
     List<Comment> comments = new ArrayList<>();
     for (Entity entity : results.asList(FetchOptions.Builder.withLimit(maxInt))) {
       String name = (String) entity.getProperty("name");
@@ -66,10 +66,12 @@ public class DataServlet extends HttpServlet {
 
   
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    // Obtain comment information from form
     String name = request.getParameter("name-input");
     String commentText = request.getParameter("comment-text-input");
     long timestamp = System.currentTimeMillis();
 
+    // Create entity for comment
     Entity commentEntity = new Entity("Comment");
     commentEntity.setProperty("name", name);
     commentEntity.setProperty("commentText", commentText);

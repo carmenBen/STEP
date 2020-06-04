@@ -9,7 +9,7 @@
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js" ></script>
     <script src="script.js"></script>
   </head>
-  <body onload="getComments(5)">
+  <body onload="getComments()">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <a class="navbar-brand" href="index.html">Home</a>
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,25 +37,30 @@
         <a href="https://github.com/carmenBen">GitHub Profile</a>
         <br>
         <br>
+        <p><strong>Submit a comment</strong>:</p>
         <form action="/comments" method="POST" id="comments-form">
-          <p><strong>Submit a comment</strong>:</p>
-          <label for="name-input">Name:</label><br>
-          <input type="text" name="name-input"><br>
-          <label for="comment-text-input">Comment:</label><br>
-          <textarea form="comments-form" name="comment-text-input" cols="23"></textarea><br><br>
-          <input type="submit"/>
+          <div class="form-group">
+              <label for="name-input">Name:</label><br>
+              <input type="text" class="form-control" name="name-input">
+          </div>
+          <div class="form-group">
+            <label for="comment-text-input">Comment:</label>
+            <textarea class="form-control" name="comment-text-input" rows="3"></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
         </form>
       </div>
       <div class="col-md-3">
         <br>
-        <strong>Comments:</strong><br>
-        <div id="comments-container"></div>
+        <h4>Comments:</h4>
+        <ul class="list-unstyled" id="comments-list-container"></ul>
         <label for="comment-number">Number of Comments to Display</label>
         <select name="comment-number" id="comment-number" onchange="changeCommentNumber()">
           <option value="5">5</option>
           <option value="10">10</option>
           <option value="15">15</option>
         </select>
+        <button type="button" class="btn btn-danger" onclick="deleteComments()">Delete All Comments</button>
       </div>
     </div>
   </body>
