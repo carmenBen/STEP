@@ -38,6 +38,7 @@ public class DataServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // Obtain requested comments from datastore
     String maxString = request.getParameter("max");
+    String sortDirection = request.getParameter("sort");
     Integer maxInt;
     try {
       maxInt = Integer.parseInt(maxString);
@@ -45,7 +46,20 @@ public class DataServlet extends HttpServlet {
       maxInt = 5;
     }
 
-    Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
+    Query query = new Query("Comment");
+    switch (sortDirection) {
+      case "earliest":
+        query.addSort("timestamp", SortDirection.ASCENDING);
+        break;
+      case "aToZ":
+        query.addSort("name", SortDirection.ASCENDING);
+        break;
+      case "zToA":
+        query.addSort("name", SortDirection.DESCENDING);
+        break;
+      default:
+        query.addSort("timestamp", SortDirection.DESCENDING);
+    }
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
@@ -53,11 +67,12 @@ public class DataServlet extends HttpServlet {
     // Loop through comments and then send as json to page
     List<Comment> comments = new ArrayList<>();
     for (Entity entity : results.asList(FetchOptions.Builder.withLimit(maxInt))) {
+      long id = entity.getKey().getId();
       String name = (String) entity.getProperty("name");
       String commentText = (String) entity.getProperty("commentText");
       long timestamp = (long) entity.getProperty("timestamp");
 
-      Comment comment = new Comment(name, commentText, timestamp);
+      Comment comment = new Comment(id, name, commentText, timestamp);
       comments.add(comment);
     }
 

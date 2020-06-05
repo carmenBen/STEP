@@ -34,12 +34,21 @@ import javax.servlet.http.HttpServletResponse;
 public class DeleteDataServlet extends HttpServlet {
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    Query query = new Query("Comment");
-    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
-    PreparedQuery results = datastore.prepare(query);
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService(); 
 
-    for (Entity entity : results.asIterable()) {
-      Key commentEntityKey = entity.getKey();
+    if (request.getParameter("id") == null){
+      // delete all comments
+      Query query = new Query("Comment");
+      PreparedQuery results = datastore.prepare(query);
+
+      for (Entity entity : results.asIterable()) {
+        Key commentEntityKey = entity.getKey();
+        datastore.delete(commentEntityKey);
+      }
+    } else {
+      // if passed specific comment id to delete
+      long id = Long.parseLong(request.getParameter("id"));
+      Key commentEntityKey = KeyFactory.createKey("Comment", id);
       datastore.delete(commentEntityKey);
     }
   }

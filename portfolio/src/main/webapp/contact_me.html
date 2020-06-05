@@ -39,9 +39,16 @@
       <div class="col-md-3">
         <br>
         <h4>Comments:</h4>
+        <label for="sort">Sort by</label>
+        <select class="btn btn-light" name="sort" id="sort-direction" onchange="changeSort()">
+          <option value="latest">Latest</option>
+          <option value="earliest">Earliest</option>
+          <option value="aToZ">Alphabetical(A-Z)</option>
+          <option value="zToA">Alphabetical(Z-A)</option>
+        </select>
         <ul class="list-unstyled" id="comments-list-container"></ul>
         <label for="comment-number">Number of Comments to Display</label>
-        <select name="comment-number" id="comment-number" onchange="changeCommentNumber()">
+        <select class="btn btn-light" name="comment-number" id="comment-number" onchange="changeCommentNumber()">
           <option value="5">5</option>
           <option value="10">10</option>
           <option value="15">15</option>
