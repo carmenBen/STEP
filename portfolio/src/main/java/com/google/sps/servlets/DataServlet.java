@@ -14,11 +14,15 @@
 
 package com.google.sps.servlets;
 
-
-import com.google.sps.data.Comment;
 import com.google.appengine.api.datastore.DatastoreService;
 import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
+import com.google.appengine.api.datastore.FetchOptions;
+import com.google.appengine.api.datastore.PreparedQuery;
+import com.google.appengine.api.datastore.Query;
+import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.gson.Gson;
+import com.google.sps.data.Comment;
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -26,11 +30,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
-import com.google.gson.Gson;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query;
-import com.google.appengine.api.datastore.Query.SortDirection;
-import com.google.appengine.api.datastore.FetchOptions;
 
 /** Servlet that returns comments and adds comments.*/
 @WebServlet("/comments")
@@ -39,7 +38,12 @@ public class DataServlet extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // Obtain requested comments from datastore
     String maxString = request.getParameter("max");
-    Integer maxInt = Integer.parseInt(maxString);
+    Integer maxInt;
+    try {
+      maxInt = Integer.parseInt(maxString);
+    } catch (NumberFormatException ok) {
+      maxInt = 5;
+    }
 
     Query query = new Query("Comment").addSort("timestamp", SortDirection.DESCENDING);
 
@@ -58,13 +62,11 @@ public class DataServlet extends HttpServlet {
     }
 
     Gson gson = new Gson();
-
     response.setContentType("application/json;");
     response.getWriter().println(gson.toJson(comments));
   }
-
-
   
+  @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // Obtain comment information from form
     String name = request.getParameter("name-input");

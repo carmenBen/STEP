@@ -55,39 +55,52 @@ function addRandomActivity() {
   activityPhotoItem.setAttribute("src",activityPhoto);
 }
 
-// Gets previous comments and loads them, formatted, to page
+/**
+ * Gets previous comments and loads them, formatted, to page
+ * @param {number=} maxComments an optional number specifying how many comemnts
+ *     to load
+ */
 function getComments(maxComments = 5) {
-  fetch('/comments?max='+maxComments).then(response => response.json()).then((commentsData) => {
+  fetch('/comments?max='+maxComments).then((response) => response.json()).then(
+        (commentsData) => {
     const commentsContainer = document.getElementById('comments-list-container');
     commentsContainer.innerHTML = '';
 
-    if (commentsData.length == 0){
-        commentsContainer.innerHTML = 'No comments currently. Comment now!';
-    }
-    else {
+    if (commentsData.length === 0) {
+      commentsContainer.innerHTML = 'No comments currently. Comment now!';
+    } else {
       let i;
       let commentsText = '';
-
       for (i = 0; i < commentsData.length; i++) {
-        const commentEl = createCommentElement(commentsData[i].name, commentsData[i].commentText);
+        const commentEl = 
+            createCommentElement(commentsData[i].name,
+                commentsData[i].commentText);
         commentsContainer.appendChild(commentEl);
       }
     }
   });
 }
 
-// Updates max number of comments shown when number is chosen on drop down
+/**
+ * Changes number of comments displayed on page
+ */
 function changeCommentNumber() {
-    getComments(document.getElementById('comment-number').value);
+  getComments(document.getElementById('comment-number').value);
 }
 
-
-// Deletes all commments when delete comment button pressed
+/**
+ * Deletes all comments from datastore by calling DeleteDataServlet post
+ */
 function deleteComments() {
-    fetch('/delete-data', {method: 'POST'}).then(window.location.reload(true));
+  fetch('/delete-data', {method: 'POST'}).then(window.location.reload(true));
 }
 
-// creates list element of media type from Bootstrap formatting for comments
+/**
+ * Creates formatted media list element for comment, from Bootstrap formatting
+ * @param {string} name on comment
+ * @param {string}
+ * @return {Element} formatted element created from name and commentText
+ */
 function createCommentElement(name, commentText) {
   const liElement = document.createElement('li');
   liElement.setAttribute('class','media mt-3');
@@ -99,17 +112,16 @@ function createCommentElement(name, commentText) {
   imgElement.src ='images/profile.png';
   liElement.appendChild(imgElement);  
 
-  const divElement = document.createElement("div"); 
+  const divElement = document.createElement('div'); 
   divElement.setAttribute('class','media-body');
   liElement.appendChild(divElement);  
 
-  const headerElement = document.createElement("h5"); 
+  const headerElement = document.createElement('h5'); 
   headerElement.setAttribute('class','mt-0 mb-1');
   divElement.appendChild(headerElement);  
 
   nameNode = document.createTextNode(name); 
   headerElement.appendChild(nameNode);  
-
   commentTextNode = document.createTextNode(commentText); 
   divElement.appendChild(commentTextNode);  
 

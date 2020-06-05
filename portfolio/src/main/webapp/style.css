@@ -1,3 +1,12 @@
 #activity-title-container {
   font-weight:bolder;
 }
+
+.img-fluid-main {
+  height: auto;
+  max-width: 80%;
+}
+
+.bold {
+  font-weight: 450;
+}
