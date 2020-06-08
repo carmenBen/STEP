@@ -74,9 +74,9 @@ function getComments(maxComments = 5, sortDirection = 'latest') {
       commentsContainer.innerHTML = 'No comments currently. Comment now!';
     } else {
       let commentsText = '';
-      for ( let i = 0; i < commentsData.length; i++) {
+      for (let i = 0; i < commentsData.length; i++) {
         const commentEl = 
-            createCommentElement(commentsData[i].id, commentsData[i].name,
+            createCommentElement(commentsData[i].id, commentsData[i].username,
                 commentsData[i].commentText);
         commentsContainer.appendChild(commentEl);
       }
@@ -120,11 +120,11 @@ function deleteComment(id) {
 /**
  * Creates formatted media list element for comment, from Bootstrap formatting.
  * @param {number} id of comment.
- * @param {string} name on comment.
+ * @param {string} username on comment.
  * @param {string} comment text.
  * @return {Element} formatted element created from name and commentText.
  */
-function createCommentElement(id, name, commentText) {
+function createCommentElement(id, username, commentText) {
   const commentContainer = document.createElement('li');
   commentContainer.setAttribute('class','media mt-3');
 
@@ -152,10 +152,39 @@ function createCommentElement(id, name, commentText) {
   });
   commentContainer.appendChild(deleteButtonElement);
 
-  nameNode = document.createTextNode(name); 
-  headerElement.appendChild(nameNode);  
+  usernameNode = document.createTextNode(username); 
+  headerElement.appendChild(usernameNode);  
   commentTextNode = document.createTextNode(commentText); 
   divElement.appendChild(commentTextNode);  
 
   return commentContainer;
+}
+
+/**
+ * Shows comment form or login message based on whether or not user is logged
+ *     in.
+ */
+function displayCommentsForm() {
+  fetch('/login').then(response => response.text()).then((loginResponse) => {
+    document.getElementById('submit-comment-container').innerHTML =
+        loginResponse;
+  });
+}
+
+/**
+ * Displays comments and comments form or login info when contact me page
+ *     loaded.
+ */
+function setUpContactPage() {
+    getComments();
+    displayCommentsForm();
+}
+
+/**
+ * Displays change username form.
+ */
+function changeUsername() {
+  fetch('/username').then(response => response.text()).then((usernameResponse) => {
+    document.getElementById('submit-comment-container').innerHTML = usernameResponse;
+  });
 }

@@ -21,6 +21,8 @@ import com.google.appengine.api.datastore.FetchOptions;
 import com.google.appengine.api.datastore.PreparedQuery;
 import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.SortDirection;
+import com.google.appengine.api.users.UserService;
+import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.Gson;
 import com.google.sps.data.Comment;
 import java.io.IOException;
@@ -34,6 +36,7 @@ import java.util.List;
 /** Servlet that returns comments and adds comments.*/
 @WebServlet("/comments")
 public class DataServlet extends HttpServlet {
+    
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
     // Obtain requested comments from datastore.
@@ -52,10 +55,10 @@ public class DataServlet extends HttpServlet {
         query.addSort("timestamp", SortDirection.ASCENDING);
         break;
       case "aToZ":
-        query.addSort("name", SortDirection.ASCENDING);
+        query.addSort("username", SortDirection.ASCENDING);
         break;
       case "zToA":
-        query.addSort("name", SortDirection.DESCENDING);
+        query.addSort("username", SortDirection.DESCENDING);
         break;
       default:
         query.addSort("timestamp", SortDirection.DESCENDING);
@@ -68,11 +71,12 @@ public class DataServlet extends HttpServlet {
     List<Comment> comments = new ArrayList<>();
     for (Entity entity : results.asList(FetchOptions.Builder.withLimit(maxInt))) {
       long id = entity.getKey().getId();
-      String name = (String) entity.getProperty("name");
+      String username = (String) entity.getProperty("username");
+      String email = (String) entity.getProperty("email");
       String commentText = (String) entity.getProperty("commentText");
       long timestamp = (long) entity.getProperty("timestamp");
 
-      Comment comment = new Comment(id, name, commentText, timestamp);
+      Comment comment = new Comment(id, username, email, commentText, timestamp);
       comments.add(comment);
     }
 
@@ -83,14 +87,18 @@ public class DataServlet extends HttpServlet {
   
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    UserService userService = UserServiceFactory.getUserService();
+    
     // Obtain comment information from form.
-    String name = request.getParameter("name-input");
+    String username = getUsername(userService.getCurrentUser().getUserId());
+    String email = userService.getCurrentUser().getEmail();
     String commentText = request.getParameter("comment-text-input");
     long timestamp = System.currentTimeMillis();
 
     // Create entity for comment.
     Entity commentEntity = new Entity("Comment");
-    commentEntity.setProperty("name", name);
+    commentEntity.setProperty("username", username);
+    commentEntity.setProperty("email", email);
     commentEntity.setProperty("commentText", commentText);
     commentEntity.setProperty("timestamp", timestamp);
 
@@ -99,5 +107,20 @@ public class DataServlet extends HttpServlet {
 
     // Redirect back to the contact page.
     response.sendRedirect("/contact_me.html");
+  }
+
+  /** Returns the username of the user with id, or null if the user has not set a username. */
+  private String getUsername(String id) {
+    DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+    Query query =
+        new Query("UserInfo")
+            .setFilter(new Query.FilterPredicate("id", Query.FilterOperator.EQUAL, id));
+    PreparedQuery results = datastore.prepare(query);
+    Entity entity = results.asSingleEntity();
+    if (entity == null) {
+      return null;
+    }
+    String username = (String) entity.getProperty("username");
+    return username;
   }
 }
