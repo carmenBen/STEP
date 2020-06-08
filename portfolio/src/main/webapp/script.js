@@ -74,7 +74,7 @@ function getComments(maxComments = 5, sortDirection = 'latest') {
       commentsContainer.innerHTML = 'No comments currently. Comment now!';
     } else {
       let commentsText = '';
-      for ( let i = 0; i < commentsData.length; i++) {
+      for (let i = 0; i < commentsData.length; i++) {
         const commentEl = 
             createCommentElement(commentsData[i].id, commentsData[i].name,
                 commentsData[i].commentText);
