@@ -37,7 +37,7 @@ public class DeleteDataServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService(); 
 
     if (request.getParameter("id") == null){
-      // delete all comments
+      // Delete all comments when no comment id has been specified.
       Query query = new Query("Comment");
       PreparedQuery results = datastore.prepare(query);
 
@@ -46,7 +46,7 @@ public class DeleteDataServlet extends HttpServlet {
         datastore.delete(commentEntityKey);
       }
     } else {
-      // if passed specific comment id to delete
+      // Delete specific comment when comment id has been specified.
       long id = Long.parseLong(request.getParameter("id"));
       Key commentEntityKey = KeyFactory.createKey("Comment", id);
       datastore.delete(commentEntityKey);

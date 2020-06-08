@@ -58,10 +58,10 @@ function addActivity() {
 }
 
 /**
- * Gets previous comments and loads them, formatted, to page
- * @param {number=} maxComments an optional number specifying how many comemnts
- *     to load
- * @param {string=} sort direction by string
+ * Gets previous comments and loads them, formatted, to page.
+ * @param {number=} maxComments an optional number specifying how many comments
+ *     to load.
+ * @param {string=} sort direction by string.
  */
 function getComments(maxComments = 5, sortDirection = 'latest') {
   fetch('/comments?max='+maxComments+'&sort='+sortDirection).then(
@@ -73,9 +73,8 @@ function getComments(maxComments = 5, sortDirection = 'latest') {
     if (commentsData.length === 0) {
       commentsContainer.innerHTML = 'No comments currently. Comment now!';
     } else {
-      let i;
       let commentsText = '';
-      for (i = 0; i < commentsData.length; i++) {
+      for ( let i = 0; i < commentsData.length; i++) {
         const commentEl = 
             createCommentElement(commentsData[i].id, commentsData[i].name,
                 commentsData[i].commentText);
@@ -86,7 +85,7 @@ function getComments(maxComments = 5, sortDirection = 'latest') {
 }
 
 /**
- * Changes number of comments displayed on page
+ * Changes number of comments displayed on page.
  */
 function changeCommentNumber() {
   getComments(document.getElementById('comment-number').value,
@@ -94,7 +93,7 @@ function changeCommentNumber() {
 }
 
 /**
- * Changes sort order of comments displayed on page
+ * Changes sort order of comments displayed on page.
  */
 function changeSort() {
   getComments(document.getElementById('comment-number').value,
@@ -102,7 +101,7 @@ function changeSort() {
 }
 
 /**
- * Deletes all comments from datastore by calling DeleteDataServlet post
+ * Deletes all comments from datastore by calling DeleteDataServlet post.
  */
 function deleteComments() {
   fetch('/delete-data', {method: 'POST'}).then(window.location.reload(true));
@@ -110,8 +109,8 @@ function deleteComments() {
 }
 
 /**
- * Deletes a given comment from datastore by calling DeleteDataServlet post
- * @param {number} id of comment to be deleted
+ * Deletes a given comment from datastore by calling DeleteDataServlet post.
+ * @param {number} id of comment to be deleted.
  */
 function deleteComment(id) {
   fetch('/delete-data?id='+id, {method: 'POST'}).then(
@@ -119,26 +118,26 @@ function deleteComment(id) {
 }
 
 /**
- * Creates formatted media list element for comment, from Bootstrap formatting
- * @param {number} id of comment
- * @param {string} name on comment
- * @param {string}
- * @return {Element} formatted element created from name and commentText
+ * Creates formatted media list element for comment, from Bootstrap formatting.
+ * @param {number} id of comment.
+ * @param {string} name on comment.
+ * @param {string} comment text.
+ * @return {Element} formatted element created from name and commentText.
  */
 function createCommentElement(id, name, commentText) {
-  const liElement = document.createElement('li');
-  liElement.setAttribute('class','media mt-3');
+  const commentContainer = document.createElement('li');
+  commentContainer.setAttribute('class','media mt-3');
 
   const imgElement = document.createElement('img');
   imgElement.setAttribute('class', 'mr-3');
   imgElement.setAttribute('height', '64');
   imgElement.setAttribute('width', '64');
   imgElement.src ='images/profile.png';
-  liElement.appendChild(imgElement);  
+  commentContainer.appendChild(imgElement);  
 
   const divElement = document.createElement('div'); 
   divElement.setAttribute('class','media-body');
-  liElement.appendChild(divElement);  
+  commentContainer.appendChild(divElement);  
 
   const headerElement = document.createElement('h5'); 
   headerElement.setAttribute('class','mt-0 mb-1');
@@ -151,12 +150,12 @@ function createCommentElement(id, name, commentText) {
   deleteButtonElement.addEventListener('click', () => {
     deleteComment(id);
   });
-  liElement.appendChild(deleteButtonElement);
+  commentContainer.appendChild(deleteButtonElement);
 
   nameNode = document.createTextNode(name); 
   headerElement.appendChild(nameNode);  
   commentTextNode = document.createTextNode(commentText); 
   divElement.appendChild(commentTextNode);  
 
-  return liElement;
+  return commentContainer;
 }

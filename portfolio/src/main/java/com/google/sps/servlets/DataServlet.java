@@ -36,7 +36,7 @@ import java.util.List;
 public class DataServlet extends HttpServlet {
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // Obtain requested comments from datastore
+    // Obtain requested comments from datastore.
     String maxString = request.getParameter("max");
     String sortDirection = request.getParameter("sort");
     Integer maxInt;
@@ -64,7 +64,7 @@ public class DataServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     PreparedQuery results = datastore.prepare(query);
 
-    // Loop through comments and then send as json to page
+    // Create a list of comments from the data received from the Datastore.
     List<Comment> comments = new ArrayList<>();
     for (Entity entity : results.asList(FetchOptions.Builder.withLimit(maxInt))) {
       long id = entity.getKey().getId();
@@ -83,12 +83,12 @@ public class DataServlet extends HttpServlet {
   
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    // Obtain comment information from form
+    // Obtain comment information from form.
     String name = request.getParameter("name-input");
     String commentText = request.getParameter("comment-text-input");
     long timestamp = System.currentTimeMillis();
 
-    // Create entity for comment
+    // Create entity for comment.
     Entity commentEntity = new Entity("Comment");
     commentEntity.setProperty("name", name);
     commentEntity.setProperty("commentText", commentText);
@@ -97,7 +97,7 @@ public class DataServlet extends HttpServlet {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(commentEntity);
 
-    // Redirect back to the HTML page.
+    // Redirect back to the contact page.
     response.sendRedirect("/contact_me.html");
   }
 }
