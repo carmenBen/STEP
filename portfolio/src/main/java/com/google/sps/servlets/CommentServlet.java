@@ -80,9 +80,13 @@ public class CommentServlet extends HttpServlet {
       comments.add(comment);
     }
 
+    UserService userService = UserServiceFactory.getUserService();
+    String email = userService.getCurrentUser().getEmail();
+
     Gson gson = new Gson();
     response.setContentType("application/json;");
-    response.getWriter().println(gson.toJson(comments));
+    String json = "{ \"comments\": " + gson.toJson(comments) + ", \"email\": \"" + email + "\" }";
+    response.getWriter().println(json);
   }
   
   @Override

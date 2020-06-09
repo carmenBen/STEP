@@ -32,18 +32,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /** Servlet that deletes all comments.*/
-@WebServlet("/delete-comment")
+@WebServlet("/delete-comments")
 public class DeleteCommentServlet extends HttpServlet {
-@Override
-  public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    UserService userService = UserServiceFactory.getUserService();
-    String email = userService.getCurrentUser().getEmail();
-    response.setContentType("text/html");
-
-    response.getWriter().print(email);
-    return;
-  }
-
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService(); 

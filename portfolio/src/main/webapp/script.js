@@ -63,23 +63,22 @@ function addActivity() {
  *     to load.
  * @param {string=} sort direction by string.
  */
-async function getComments(maxComments = 5, sortDirection = 'latest') {
-  const currentUserEmail = await getCurrentEmail(); 
+function getComments(maxComments = 5, sortDirection = 'latest') {
   fetch('/comments?max='+maxComments+'&sort='+sortDirection).then(
         (response) => response.json()).then((commentsData) => {
     const commentsContainer = 
         document.getElementById('comments-list-container');
     commentsContainer.innerHTML = '';
 
-    if (commentsData.length === 0) {
+    if (commentsData.comments.length === 0) {
       commentsContainer.innerHTML = 'No comments currently. Comment now!';
     } else {
       let commentsText = '';
-      for (let i = 0; i < commentsData.length; i++) {
+      for (let i = 0; i < commentsData.comments.length; i++) {
+        const showDelete = (commentsData.email === commentsData.comments[i].email);
         const commentEl = 
-            createCommentElement(commentsData[i].id, commentsData[i].username,
-                commentsData[i].email, commentsData[i].commentText,
-                currentUserEmail);
+            createCommentElement(commentsData.comments[i].id, commentsData.comments[i].username,
+                commentsData.comments[i].commentText, showDelete);
         commentsContainer.appendChild(commentEl);
       }
     }
@@ -106,7 +105,7 @@ function changeSort() {
  * Deletes all comments from datastore by calling DeleteDataServlet post.
  */
 function deleteComments() {
-  fetch('/delete-comment', {method: 'POST'}).then(window.location.reload(true));
+  fetch('/delete-comments', {method: 'POST'}).then(window.location.reload(true));
   document.getElementById('comment-lists-container').remove();
 }
 
@@ -115,19 +114,19 @@ function deleteComments() {
  * @param {number} id of comment to be deleted.
  */
 function deleteComment(id) {
-  fetch('/delete-comment?id='+id, {method: 'POST'}).then(
+  fetch('/delete-comments?id='+id, {method: 'POST'}).then(
       window.location.reload(true));
 }
 
 /**
  * Creates formatted media list element for comment, from Bootstrap formatting.
  * @param {number} id of comment.
- * @param {string} username on comment.
- * @param {string} email on comment.
+ * @param {string} name on comment.
  * @param {string} comment text.
+ * @param {boolean} true if current user wrote comment, and therefore should show delete comment button.
  * @return {Element} formatted element created from name and commentText.
  */
-function createCommentElement(id, username, email, commentText, currentUserEmail) {
+function createCommentElement(id, name, commentText, showDelete) {
   const commentContainer = document.createElement('li');
   commentContainer.setAttribute('class','media mt-3');
 
@@ -146,10 +145,7 @@ function createCommentElement(id, username, email, commentText, currentUserEmail
   headerElement.setAttribute('class','mt-0 mb-1');
   divElement.appendChild(headerElement); 
 
-  console.log("."+currentUserEmail+".");
-  // Find out if correct person...then show delete button
-  if (email === currentUserEmail) {
-    console.log("show button!");
+  if (showDelete) {
     const deleteButtonElement = document.createElement('button');
     deleteButtonElement.setAttribute('class', 'btn btn-light');
     deleteButtonElement.setAttribute('type', 'button');
@@ -160,8 +156,8 @@ function createCommentElement(id, username, email, commentText, currentUserEmail
     commentContainer.appendChild(deleteButtonElement);
   }
 
-  usernameNode = document.createTextNode(username); 
-  headerElement.appendChild(usernameNode);  
+  nameNode = document.createTextNode(name); 
+  headerElement.appendChild(nameNode);  
   commentTextNode = document.createTextNode(commentText); 
   divElement.appendChild(commentTextNode);  
 
@@ -194,15 +190,5 @@ function setUpContactPage() {
 function changeUsername() {
   fetch('/username').then(response => response.text()).then((usernameResponse) => {
     document.getElementById('submit-comment-container').innerHTML = usernameResponse;
-  });
-}
-
-/**
- * Creates formatted media list element for comment, from Bootstrap formatting.
- * @return {string} returns email of current user.
- */
-function getCurrentEmail() {
-  fetch('/delete-comment').then(response => response.text()).then((currentEmail) => {
-    return currentEmail;
   });
 }
