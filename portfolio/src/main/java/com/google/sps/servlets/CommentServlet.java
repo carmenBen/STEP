@@ -33,9 +33,12 @@ import java.util.List;
 
 /** Servlet that returns comments and adds comments.*/
 @WebServlet("/comments")
-public class DataServlet extends HttpServlet {
+public class CommentServlet extends HttpServlet {
+    static final String NAME = "name";
+    static final String TIMESTAMP = "timestamp";
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+
     // Obtain requested comments from datastore.
     String maxString = request.getParameter("max");
     String sortDirection = request.getParameter("sort");
@@ -49,16 +52,16 @@ public class DataServlet extends HttpServlet {
     Query query = new Query("Comment");
     switch (sortDirection) {
       case "earliest":
-        query.addSort("timestamp", SortDirection.ASCENDING);
+        query.addSort(TIMESTAMP, SortDirection.ASCENDING);
         break;
       case "aToZ":
-        query.addSort("name", SortDirection.ASCENDING);
+        query.addSort(NAME, SortDirection.ASCENDING);
         break;
       case "zToA":
-        query.addSort("name", SortDirection.DESCENDING);
+        query.addSort(NAME, SortDirection.DESCENDING);
         break;
       default:
-        query.addSort("timestamp", SortDirection.DESCENDING);
+        query.addSort(TIMESTAMP, SortDirection.DESCENDING);
     }
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();

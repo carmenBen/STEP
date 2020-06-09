@@ -104,7 +104,7 @@ function changeSort() {
  * Deletes all comments from datastore by calling DeleteDataServlet post.
  */
 function deleteComments() {
-  fetch('/delete-data', {method: 'POST'}).then(window.location.reload(true));
+  fetch('/delete-comments', {method: 'POST'}).then(window.location.reload(true));
   document.getElementById('comment-lists-container').remove();
 }
 
@@ -113,7 +113,7 @@ function deleteComments() {
  * @param {number} id of comment to be deleted.
  */
 function deleteComment(id) {
-  fetch('/delete-data?id='+id, {method: 'POST'}).then(
+  fetch('/delete-comments?id='+id, {method: 'POST'}).then(
       window.location.reload(true));
 }
 
