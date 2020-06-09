@@ -63,7 +63,8 @@ function addActivity() {
  *     to load.
  * @param {string=} sort direction by string.
  */
-function getComments(maxComments = 5, sortDirection = 'latest') {
+async function getComments(maxComments = 5, sortDirection = 'latest') {
+  const currentUserEmail = await getCurrentEmail(); 
   fetch('/comments?max='+maxComments+'&sort='+sortDirection).then(
         (response) => response.json()).then((commentsData) => {
     const commentsContainer = 
@@ -77,7 +78,8 @@ function getComments(maxComments = 5, sortDirection = 'latest') {
       for (let i = 0; i < commentsData.length; i++) {
         const commentEl = 
             createCommentElement(commentsData[i].id, commentsData[i].username,
-                commentsData[i].commentText);
+                commentsData[i].email, commentsData[i].commentText,
+                currentUserEmail);
         commentsContainer.appendChild(commentEl);
       }
     }
@@ -104,7 +106,7 @@ function changeSort() {
  * Deletes all comments from datastore by calling DeleteDataServlet post.
  */
 function deleteComments() {
-  fetch('/delete-data', {method: 'POST'}).then(window.location.reload(true));
+  fetch('/delete-comment', {method: 'POST'}).then(window.location.reload(true));
   document.getElementById('comment-lists-container').remove();
 }
 
@@ -113,7 +115,7 @@ function deleteComments() {
  * @param {number} id of comment to be deleted.
  */
 function deleteComment(id) {
-  fetch('/delete-data?id='+id, {method: 'POST'}).then(
+  fetch('/delete-comment?id='+id, {method: 'POST'}).then(
       window.location.reload(true));
 }
 
@@ -121,10 +123,11 @@ function deleteComment(id) {
  * Creates formatted media list element for comment, from Bootstrap formatting.
  * @param {number} id of comment.
  * @param {string} username on comment.
+ * @param {string} email on comment.
  * @param {string} comment text.
  * @return {Element} formatted element created from name and commentText.
  */
-function createCommentElement(id, username, commentText) {
+function createCommentElement(id, username, email, commentText, currentUserEmail) {
   const commentContainer = document.createElement('li');
   commentContainer.setAttribute('class','media mt-3');
 
@@ -143,14 +146,19 @@ function createCommentElement(id, username, commentText) {
   headerElement.setAttribute('class','mt-0 mb-1');
   divElement.appendChild(headerElement); 
 
-  const deleteButtonElement = document.createElement('button');
-  deleteButtonElement.setAttribute('class', 'btn btn-light');
-  deleteButtonElement.setAttribute('type', 'button');
-  deleteButtonElement.innerText = 'Delete Comment';
-  deleteButtonElement.addEventListener('click', () => {
-    deleteComment(id);
-  });
-  commentContainer.appendChild(deleteButtonElement);
+  console.log("."+currentUserEmail+".");
+  // Find out if correct person...then show delete button
+  if (email === currentUserEmail) {
+    console.log("show button!");
+    const deleteButtonElement = document.createElement('button');
+    deleteButtonElement.setAttribute('class', 'btn btn-light');
+    deleteButtonElement.setAttribute('type', 'button');
+    deleteButtonElement.innerText = 'Delete Comment';
+    deleteButtonElement.addEventListener('click', () => {
+      deleteComment(id);
+    });
+    commentContainer.appendChild(deleteButtonElement);
+  }
 
   usernameNode = document.createTextNode(username); 
   headerElement.appendChild(usernameNode);  
@@ -189,10 +197,12 @@ function changeUsername() {
   });
 }
 
-/** Creates a map and adds it to the page. */
-function createMap() {
-    console.log("test");
-  const map = new google.maps.Map(
-      document.getElementById('map'),
-      {center: {lat: 37.422, lng: -122.084}, zoom: 16});
+/**
+ * Creates formatted media list element for comment, from Bootstrap formatting.
+ * @return {string} returns email of current user.
+ */
+function getCurrentEmail() {
+  fetch('/delete-comment').then(response => response.text()).then((currentEmail) => {
+    return currentEmail;
+  });
 }

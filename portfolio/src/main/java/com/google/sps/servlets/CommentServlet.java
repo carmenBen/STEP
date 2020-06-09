@@ -35,7 +35,7 @@ import java.util.List;
 
 /** Servlet that returns comments and adds comments.*/
 @WebServlet("/comments")
-public class DataServlet extends HttpServlet {
+public class CommentServlet extends HttpServlet {
     
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
