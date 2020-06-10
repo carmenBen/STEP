@@ -2,15 +2,16 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Contact Me</title>
+    <title>Fun Activities!</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDqIUBwoBC48NWrUXnBBqmUCy-SSd5RaFU"></script>
     <script src="script.js"></script>
     <link rel="stylesheet" href="style.css">
   </head>
-  <body onload="setUpContactPage()">
+  <body onload="createMap()">
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -21,43 +22,21 @@
           <a class="nav-item nav-link" href="work_experience.html">Work Experience</a>
           <a class="nav-item nav-link" href="past_projects.html">Past Projects</a>
           <a class="nav-item nav-link" href="education.html">Education History</a>
-          <a class="nav-item nav-link" href="early_life.html">Early Life</a>
+          <a class="nav-item nav-link active" href="early_life.html">Early Life</a>
           <a class="nav-item nav-link" href="fun_activities.html">Fun Activities</a>
-          <a class="nav-item nav-link active" href="contact_me.html">Contact Me</a>
+          <a class="nav-item nav-link" href="contact_me.html">Contact Me</a>
         </div>
       </div>
     </nav>
     <div class="row" id="content">
       <div class="col-md-3 offset-md-3">
         <br>
-        <h1>Contact Me</h1>
-        <img src="images/contact.JPG" class="img-fluid-main" alt="Photograph of Carmen Benitez">
-        <br><br>
-        Email: cbenitez@hmc.edu<br>
-        <a href="https://www.linkedin.com/in/carmen-benitez-0b409a171">LinkedIn Profile</a><br>
-        <a href="https://github.com/carmenBen">GitHub Profile</a>
+        <h1>Early Life</h1>
+        <div id="map"></div>
       </div>
       <div class="col-md-3">
-        <br>
-        <h4>Comments:</h4>
-        <label for="sort">Sort by</label>
-        <select class="btn btn-light" name="sort" id="sort-direction" onchange="changeSort()">
-          <option value="latest">Latest</option>
-          <option value="earliest">Earliest</option>
-          <option value="aToZ">Alphabetical(A-Z)</option>
-          <option value="zToA">Alphabetical(Z-A)</option>
-        </select>
-        <ul class="list-unstyled" id="comments-list-container"></ul>
-        <label for="comment-number">Number of Comments to Display</label>
-        <select class="btn btn-light" name="comment-number" id="comment-number" onchange="changeCommentNumber()">
-          <option value="5">5</option>
-          <option value="10">10</option>
-          <option value="15">15</option>
-        </select>
-        <button type="button" class="btn btn-danger" onclick="deleteComments()">Delete All Comments</button>
-        <br><br>
-        <hr>
-        <div id="submit-comment-container"></div>
+        <br><br><br>
+        <div id="map-text"></div>
       </div>
     </div>
   </body>

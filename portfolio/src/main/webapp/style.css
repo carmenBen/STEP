@@ -10,3 +10,8 @@
 .bold {
   font-weight: 450;
 }
+
+#map {
+  height: 400px;
+  width: 80%;
+}

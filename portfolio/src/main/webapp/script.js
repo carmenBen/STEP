@@ -197,3 +197,37 @@ function changeUsername() {
         usernameResponse;
   });
 }
+
+/** Creates map with markers. */
+function createMap() {
+  const map = new google.maps.Map(
+      document.getElementById('map'),
+      {center: {lat: 25.246630, lng: 29.678410}, zoom: 1});
+
+  addLandmark(
+      map, 40.768093, -73.981904, 'New York City',
+      'I live in New York City!');
+      
+  addLandmark(
+      map, -33.824032, 151.187674, 'Sydney',
+      'I lived in Sydney for 10 years.');
+
+  addLandmark(
+      map, 14.563149, 121.036559, 'Manila',
+      'I was born in Manila, Philippines.');
+
+  addLandmark(
+      map, 34.105419, -117.706635, 'Claremont',
+      'I go to college at Harvey Mudd College in Claremont, CA!');
+}
+
+/** Adds a marker that shows an info window when clicked. */
+function addLandmark(map, lat, lng, title, description) {
+  const marker = new google.maps.Marker(
+      {position: {lat: lat, lng: lng}, map: map, title: title});
+
+  const infoWindow = new google.maps.InfoWindow({content: description});
+  marker.addListener('click', () => {
+    infoWindow.open(map, marker);
+  });
+}
