@@ -15,3 +15,7 @@
   height: 400px;
   width: 80%;
 }
+
+.marker-info {
+  display: none;
+}

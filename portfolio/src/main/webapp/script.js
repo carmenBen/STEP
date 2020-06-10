@@ -206,19 +206,19 @@ function createMap() {
 
   addLandmark(
       map, 40.768093, -73.981904, 'New York City',
-      'I live in New York City!');
+      'newyork');
       
   addLandmark(
       map, -33.824032, 151.187674, 'Sydney',
-      'I lived in Sydney for 10 years.');
+      'sydney');
 
   addLandmark(
       map, 14.563149, 121.036559, 'Manila',
-      'I was born in Manila, Philippines.');
+      'manila');
 
   addLandmark(
       map, 34.105419, -117.706635, 'Claremont',
-      'I go to college at Harvey Mudd College in Claremont, CA!');
+      'claremont');
 }
 
 /** Adds a marker that shows an info window when clicked. */
@@ -226,8 +226,13 @@ function addLandmark(map, lat, lng, title, description) {
   const marker = new google.maps.Marker(
       {position: {lat: lat, lng: lng}, map: map, title: title});
 
-  const infoWindow = new google.maps.InfoWindow({content: description});
+  const infoDiv = document.getElementById(description);
   marker.addListener('click', () => {
-    infoWindow.open(map, marker);
+    document.getElementById("marker-click-text").style.display = "none";
+    const markerDivs = document.getElementsByClassName("marker-info");
+    for (let i = 0; i < markerDivs.length; i++) {
+        markerDivs[i].style.display = "none";
+    }
+    infoDiv.style.display = "block";
   });
 }
