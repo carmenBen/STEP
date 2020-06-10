@@ -6,54 +6,58 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="node_modules/bootstrap/dist/js/bootstrap.min.js" ></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
     <script src="script.js"></script>
     <link rel="stylesheet" href="style.css">
   </head>
   <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <a class="navbar-brand" href="index.html">Home</a>
-      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbar-nav-alt-markup" aria-controls="navbar-nav-alt-markup" aria-expanded="false" aria-label="Toggle navigation">
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse" id="navbar-nav-alt-markup">
-        <div class="navbar-nav">
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav container">
+          <a class="nav-item nav-link" href="index.html">Home</a>
           <a class="nav-item nav-link" href="work_experience.html">Work Experience</a>
           <a class="nav-item nav-link" href="past_projects.html">Past Projects</a>
-          <a class="nav-item nav-link" href="education.html">Education History</a>
+          <a class="nav-item nav-link active" href="education.html">Education History</a>
+          <a class="nav-item nav-link" href="fun_activities.html">Fun Activities</a>
           <a class="nav-item nav-link" href="contact_me.html">Contact Me</a>
-          <a class="nav-item nav-link" href="miscellaneous.html">Miscellaneous</a>
         </div>
       </div>
     </nav>
     <div class="row" id="content">
-      <div class="col-md-4 offset-md-1">
+      <div class="col-md-3 offset-md-3">
+        <br>
         <h1>Education History</h1>
-        <img src="images/dance.JPG" class="img-fluid-main"  alt="Photograph of Carmen Benitez">
+        <img src="images/dance.JPG" class="img-fluid-main" alt="Photograph of Carmen Benitez">
       </div>
       <div class="col-md-3">
         <br>
-        <p><strong>College</strong> I am a current student at Harvey Mudd College, a member of the Claremont Colleges, where I will
-          begin Junior year in the fall. I am majoring in Computer Science/Math and concentrating, similar to a minor, in Economics.
-          Since arriving at Harvey Mudd, I have taken Computability and Logic, Data Structures and Program Development, Discrete Mathematics,
-          and Principles and Practices in Computer Science. In these courses I have worked in a variety of languages including C++, Java, and Python.
-          I am an active of KASAMA, the Filipino Club of the Claremont Colleges, and will continue serving as an Executive Board
-          Member for the club this coming year, as I did this previous year. This coming year, I will also be the Treasurer of Atwood
-          Dorm, the residence hall I have lived at for the past two years.<br><br>
-          <strong>Summer Programs</strong> In the summer of 2017, I attended Harvard University's Precollege Program, where I took
-          the Introduction to Computer Programming class which taught in C. In the summer of 2016, I attended the Pre-College Program
-          at Barnard College, where I took Psych 101 and Introduction to Neuroscience.</p>
-      </div>
-      <div class="col-md-3">
-        <br>
-        <p><strong>High School</strong> I attended Stuyvesant High School in New York City, where I earned a Regents Honors Diploma.
-          I took AP Computer Science, as well as a year of introductory computer science, through which I became familiar with
-          both Java and Python. I also was able to take AP Calculus BC, and AP Macro and Microeconomics during this time.
-          While there, I participated in Student Government, through which I held the position of Chief Auditing Officer, as well as our Debate team,
-          through which I qualified for the State Debate Championship, and was the Vice President of the Homeless Coalition, a student volunteer
-          organization that aimed to help the Homeless in the city through volunteering and advocacy. I was also an active member in the dance
-          community in the school, participating in the annual SING! musical for all four years(pictured on the left), as well as various dance
-          showcases and also being a member of the varsity Cheerleading and Stunt teams.</p>
+        <p><h5>College</h5>
+          I am a current student at <span class="bold">Harvey Mudd College</span>, a member of the Claremont Colleges, where I will
+          begin Junior year in the fall. I am majoring in <span class="bold">Computer Science/Math</span> and concentrating, similar
+          to a minor, in <span class="bold">Economics</span>. Since arriving at Harvey Mudd, I have taken Computability and Logic,
+          Data Structures and Program Development, Discrete Mathematics, and Principles and Practices in Computer Science. In these
+          courses I have worked in a variety of languages including <span class="bold">C++, Java, and Python</span>. I am an active
+          of KASAMA, the Filipino Club of the Claremont Colleges, and will continue serving as an <span class="bold">Executive Board
+          Member</span> for the club this coming year, as I did this previous year. This coming year, I will also be the
+          <span class="bold">Treasurer of Atwood Dorm</span>, the residence hall I have lived at for the past two years.<br><br>
+          <h5>High School</h5>
+          I attended <span class="bold">Stuyvesant High School</span> in New York City, where I earned a Regents Honors Diploma.
+          I took AP Computer Science, as well as a year of introductory computer science, through which I became familiar with both
+          Java and Python. I also was able to take AP Calculus BC, and AP Macro and Microeconomics during this time. While there, I
+          participated in Student Government, through which I held the position of <span class="bold">Chief Auditing Officer</span>,
+          as well as our Debate team, through which I qualified for the State Debate Championship, and was the <span class="bold">
+          Vice President of the Homeless Coalition</span>, a student volunteer organization that aimed to help the Homeless in the city
+          through volunteering and advocacy. I was also an active member in the dance community in the school, participating in the
+          annual SING! musical for all four years(pictured on the left), as well as various dance showcases and also being a member of
+          the varsity Cheerleading and Stunt teams.<br><br>
+          <h5>Summer Programs</h5>
+          In the summer of 2017, I attended <span class="bold">Harvard University's Precollege Program</span>, where I took the
+          Introduction to Computer Programming class which taught in C. In the summer of 2016, I attended the <span class="bold">
+          Pre-College Program at Barnard College</span>, where I took Psych 101 and Introduction to Neuroscience.
+        </p>
       </div>
     </div>
   </body>

@@ -47,10 +47,115 @@ function addActivity() {
   const activityImageFilename = activityImageFilenames[index];
   
   // Add the chosen activity, its description, and its photo to the page.
-  const activityTitleContainer = document.getElementById('activity-title-container');
+  const activityTitleContainer = 
+      document.getElementById('activity-title-container');
   activityTitleContainer.innerText = activityTitle;
-  const activityDescriptionContainer = document.getElementById('activity-description-container');
+  const activityDescriptionContainer = 
+      document.getElementById('activity-description-container');
   activityDescriptionContainer.innerText = activityDescription;
   const activityImageFilenameItem = document.getElementById('activity-image');
   activityImageFilenameItem.setAttribute('src', activityImageFilename);
+}
+
+/**
+ * Gets previous comments and loads them, formatted, to page.
+ * @param {number=} maxComments an optional number specifying how many comments
+ *     to load.
+ * @param {string=} sort direction by string.
+ */
+function getComments(maxComments = 5, sortDirection = 'latest') {
+  fetch('/comments?max='+maxComments+'&sort='+sortDirection).then(
+        (response) => response.json()).then((commentsData) => {
+    const commentsContainer = 
+        document.getElementById('comments-list-container');
+    commentsContainer.innerHTML = '';
+
+    if (commentsData.length === 0) {
+      commentsContainer.innerHTML = 'No comments currently. Comment now!';
+    } else {
+      let commentsText = '';
+      for (let i = 0; i < commentsData.length; i++) {
+        const commentEl = 
+            createCommentElement(commentsData[i].id, commentsData[i].name,
+                commentsData[i].commentText);
+        commentsContainer.appendChild(commentEl);
+      }
+    }
+  });
+}
+
+/**
+ * Changes number of comments displayed on page.
+ */
+function changeCommentNumber() {
+  getComments(document.getElementById('comment-number').value,
+      document.getElementById('sort-direction').value);
+}
+
+/**
+ * Changes sort order of comments displayed on page.
+ */
+function changeSort() {
+  getComments(document.getElementById('comment-number').value,
+      document.getElementById('sort-direction').value);
+}
+
+/**
+ * Deletes all comments from datastore by calling DeleteDataServlet post.
+ */
+function deleteComments() {
+  fetch('/delete-comments', {method: 'POST'}).then(window.location.reload(true));
+  document.getElementById('comment-lists-container').remove();
+}
+
+/**
+ * Deletes a given comment from datastore by calling DeleteDataServlet post.
+ * @param {number} id of comment to be deleted.
+ */
+function deleteComment(id) {
+  fetch('/delete-comments?id='+id, {method: 'POST'}).then(
+      window.location.reload(true));
+}
+
+/**
+ * Creates formatted media list element for comment, from Bootstrap formatting.
+ * @param {number} id of comment.
+ * @param {string} name on comment.
+ * @param {string} comment text.
+ * @return {Element} formatted element created from name and commentText.
+ */
+function createCommentElement(id, name, commentText) {
+  const commentContainer = document.createElement('li');
+  commentContainer.setAttribute('class','media mt-3');
+
+  const imgElement = document.createElement('img');
+  imgElement.setAttribute('class', 'mr-3');
+  imgElement.setAttribute('height', '64');
+  imgElement.setAttribute('width', '64');
+  imgElement.src ='images/profile.png';
+  commentContainer.appendChild(imgElement);  
+
+  const divElement = document.createElement('div'); 
+  divElement.setAttribute('class','media-body');
+  commentContainer.appendChild(divElement);  
+
+  const headerElement = document.createElement('h5'); 
+  headerElement.setAttribute('class','mt-0 mb-1');
+  divElement.appendChild(headerElement); 
+
+  const deleteButtonElement = document.createElement('button');
+  deleteButtonElement.setAttribute('class', 'btn btn-light');
+  deleteButtonElement.setAttribute('type', 'button');
+  deleteButtonElement.innerText = 'Delete Comment';
+  deleteButtonElement.addEventListener('click', () => {
+    deleteComment(id);
+  });
+  commentContainer.appendChild(deleteButtonElement);
+
+  nameNode = document.createTextNode(name); 
+  headerElement.appendChild(nameNode);  
+  commentTextNode = document.createTextNode(commentText); 
+  divElement.appendChild(commentTextNode);  
+
+  return commentContainer;
 }
