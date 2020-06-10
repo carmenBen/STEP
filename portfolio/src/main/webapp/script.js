@@ -75,10 +75,11 @@ function getComments(maxComments = 5, sortDirection = 'latest') {
     } else {
       let commentsText = '';
       for (let i = 0; i < commentsData.comments.length; i++) {
-        const showDelete = (commentsData.email === commentsData.comments[i].email);
+        const currentComment = commentsData.comments[i];
+        const showDelete = (commentsData.email === currentComment.email);
         const commentEl = 
-            createCommentElement(commentsData.comments[i].id, commentsData.comments[i].username,
-                commentsData.comments[i].commentText, showDelete);
+            createCommentElement(currentComment.id, currentComment.username,
+                currentComment.commentText, showDelete);
         commentsContainer.appendChild(commentEl);
       }
     }
@@ -105,7 +106,8 @@ function changeSort() {
  * Deletes all comments from datastore by calling DeleteDataServlet post.
  */
 function deleteComments() {
-  fetch('/delete-comments', {method: 'POST'}).then(window.location.reload(true));
+  fetch('/delete-comments', {method: 'POST'}).then(
+      window.location.reload(true));
   document.getElementById('comment-lists-container').remove();
 }
 
@@ -123,7 +125,8 @@ function deleteComment(id) {
  * @param {number} id of comment.
  * @param {string} name on comment.
  * @param {string} comment text.
- * @param {boolean} true if current user wrote comment, and therefore should show delete comment button.
+ * @param {boolean} true if current user wrote comment, and therefore should
+ *     show delete comment button.
  * @return {Element} formatted element created from name and commentText.
  */
 function createCommentElement(id, name, commentText, showDelete) {
@@ -188,7 +191,9 @@ function setUpContactPage() {
  * Displays change username form.
  */
 function changeUsername() {
-  fetch('/username').then(response => response.text()).then((usernameResponse) => {
-    document.getElementById('submit-comment-container').innerHTML = usernameResponse;
+  fetch('/username').then(response => response.text()).then(
+      (usernameResponse) => {
+    document.getElementById('submit-comment-container').innerHTML =
+        usernameResponse;
   });
 }
