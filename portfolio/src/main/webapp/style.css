@@ -11,11 +11,17 @@
   font-weight: 450;
 }
 
-#map {
+.map {
   height: 400px;
   width: 80%;
 }
 
 .marker-info {
   display: none;
+}
+
+#newyork-map {
+  display: none;
+  height: 400px;
+  width: 80%;
 }

@@ -198,27 +198,76 @@ function changeUsername() {
   });
 }
 
-/** Creates map with markers. */
+/** Creates world map with city markers. */
 function createMap() {
   const map = new google.maps.Map(
       document.getElementById('map'),
       {center: {lat: 25.246630, lng: 29.678410}, zoom: 1});
 
-  addLandmark(
+  addCityMarker(
       map, 40.768093, -73.981904, 'New York City',
       'newyork');
       
-  addLandmark(
+  addCityMarker(
       map, -33.824032, 151.187674, 'Sydney',
       'sydney');
 
-  addLandmark(
+  addCityMarker(
       map, 14.563149, 121.036559, 'Manila',
       'manila');
 
-  addLandmark(
+  addCityMarker(
       map, 34.105419, -117.706635, 'Claremont',
       'claremont');
+}
+
+/** Adds a marker that shows info in side div when clicked. */
+function addCityMarker(map, lat, lng, title, description) {
+  const marker = new google.maps.Marker(
+      {position: {lat: lat, lng: lng}, map: map, title: title});
+
+  const infoDiv = document.getElementById(description);
+  marker.addListener('click', () => {
+    document.getElementById("marker-click-text").style.display = "none";
+    document.getElementById("newyork-map").style.display = "none";
+    const markerDivs = document.getElementsByClassName("marker-info");
+    for (let i = 0; i < markerDivs.length; i++) {
+        markerDivs[i].style.display = "none";
+    }
+    infoDiv.style.display = "block";
+  });
+}
+
+/** Creates New York map with place markers. */
+function createNewyorkMap() {
+  const map = new google.maps.Map(
+      document.getElementById('newyork-map'),
+      {center: {lat: 40.747345, lng: -73.988955}, zoom: 12});
+  document.getElementById("newyork-map").style.display = "block";
+
+  addLandmark(
+      map, 40.717839, -74.013735, 'Stuyvesant High School',
+      'I attended Stuyvesant High School from 2014-2018');
+
+  addLandmark(
+      map, 40.704545, -74.009393, 'Financial District',
+      'I lived in the financial district for almost a year from 2014-2015');
+
+  addLandmark(
+      map, 40.767702, -73.984881, 'Hells Kitchen',
+      'I\'ve live in Hells Kitchen since 2015');
+
+  addLandmark(
+      map, 40.718845, -74.034609, 'Tradeweb',
+      'I interned at Tradeweb in the summer of 2019');
+
+  addLandmark(
+      map, 40.749886, -73.993602, 'Madison Square Garden',
+      'The world famous Madison Square Garden, my favorite concert venue');
+
+  addLandmark(
+      map, 40.780943, -73.966083, 'The Great Lawn',
+      'I love to hang out on the Great Lawn during the summer with friends');
 }
 
 /** Adds a marker that shows an info window when clicked. */
@@ -226,13 +275,8 @@ function addLandmark(map, lat, lng, title, description) {
   const marker = new google.maps.Marker(
       {position: {lat: lat, lng: lng}, map: map, title: title});
 
-  const infoDiv = document.getElementById(description);
+  const infoWindow = new google.maps.InfoWindow({content: description});
   marker.addListener('click', () => {
-    document.getElementById("marker-click-text").style.display = "none";
-    const markerDivs = document.getElementsByClassName("marker-info");
-    for (let i = 0; i < markerDivs.length; i++) {
-        markerDivs[i].style.display = "none";
-    }
-    infoDiv.style.display = "block";
+    infoWindow.open(map, marker);
   });
 }
