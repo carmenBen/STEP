@@ -8,6 +8,7 @@ public final class Comment {
   private final String commentText;
   private final long timestamp;
 
+  /** Comment entity constructor.*/
   public Comment(long id, String username, String email, String commentText, long timestamp) {
     this.id = id;
     this.username = username;

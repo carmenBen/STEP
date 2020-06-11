@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
 
 /** Servlet that verifies login status and shows comment form based on result. */
 @WebServlet("/login")
-public class LoginServlet extends HttpServlet {
+public class CommentLoginServlet extends HttpServlet {
 
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -36,10 +36,11 @@ public class LoginServlet extends HttpServlet {
 
     // Show link to login page if user is not logged in.
     if (!userService.isUserLoggedIn()) {
-      String urlToRedirectToAfterUserLogsIn = "/contact_me.html";
-      String loginUrl = userService.createLoginURL(urlToRedirectToAfterUserLogsIn);
-      out.println("<p>Login to post a comment</p>");
-      out.println("<p>Login <a href=\"" + loginUrl + "\">here</a>.</p>");
+      String redirectUrlLogin = "/contact_me.html";
+      String loginUrl = userService.createLoginURL(redirectUrlLogin);
+
+      out.append("<p>Login to post a comment</p>")
+          .format("<p>Login <a href=\"%s\">here</a>.</p>", loginUrl);
       return;
     } 
 
@@ -52,26 +53,27 @@ public class LoginServlet extends HttpServlet {
 
     // Shows comment form when user is logged in with username set.
     String userEmail = userService.getCurrentUser().getEmail();
-    String urlToRedirectToAfterUserLogsOut = "/contact_me.html";
-    String logoutUrl = userService.createLogoutURL(urlToRedirectToAfterUserLogsOut);
+    String redirectUrlLogout = "/contact_me.html";
+    String logoutUrl = userService.createLogoutURL(redirectUrlLogout);
 
-    out.println("<p><h4>Submit your own comment:</h4></p>");
-    out.println("<form action=\"/comments\" method=\"POST\" id=\"comments-form\">");
-    out.println("<div class=\"form-group\">");
-    out.println("<label for=\"comment-text-input\">Comment:</label>");
-    out.println("<textarea class=\"form-control\" name=\"comment-text-input\""
-        + "rows=\"3\"></textarea>");
-    out.println("</div>");
-    out.println("<button type=\"submit\" class=\"btn btn-primary\">Submit</button>");
-    out.println("</form>");          
-    out.println("<p><br>Logout <a href=\"" + logoutUrl + "\">here</a></p>");
-    out.println("<p>Commenting as " + username
-        + ".<button type=\"button\" class=\"btn btn-link\""
-        + "onclick=\"changeUsername()\">Change Username</button></p>");
+    out.append("<p><h4>Submit your own comment:</h4></p>")
+        .append("<form action=\"/comments\" method=\"POST\" id=\"comments-form\">")
+        .append("<div class=\"form-group\">")
+        .append("<label for=\"comment-text-input\">Comment:</label>")
+        .append("<textarea class=\"form-control\" name=\"comment-text-input\"")
+        .append("rows=\"3\"></textarea>")
+        .append("</div>")
+        .append("<button type=\"submit\" class=\"btn btn-primary\">Submit</button>")
+        .append("</form>")
+        .format("<p><br>Logout <a href=\"%s\">here</a></p>", logoutUrl)
+        .format("<p>Commenting as %s.<button type=\"button\" class=\"btn btn-link\"", username)
+        .append("onclick=\"changeUsername()\">Change Username</button></p>");
   } 
 
 
-  /** Returns the username of the user with id, or null if the user has not set a username. */
+  /** Retrieves username from entity based on id. 
+   * @returns the username of the user with id, or null if the user has not set a username. 
+  */
   private String getUsername(String id) {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Query query =
@@ -79,10 +81,7 @@ public class LoginServlet extends HttpServlet {
             .setFilter(new Query.FilterPredicate("id", Query.FilterOperator.EQUAL, id));
     PreparedQuery results = datastore.prepare(query);
     Entity entity = results.asSingleEntity();
-    if (entity == null) {
-      return null;
-    }
-    String username = (String) entity.getProperty("username");
-    return username;
+    
+    return (entity == null) ? null : (String) entity.getProperty("username");
   }
 }
