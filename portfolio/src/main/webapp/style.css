@@ -20,7 +20,7 @@
   display: none;
 }
 
-#newyork-map {
+.city-map {
   display: none;
   height: 400px;
   width: 80%;

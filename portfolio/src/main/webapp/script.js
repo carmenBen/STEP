@@ -198,7 +198,7 @@ function changeUsername() {
   });
 }
 
-/** Creates world map with city markers. */
+/** Create world map with city markers. */
 function createMap() {
   const map = new google.maps.Map(
       document.getElementById('map'),
@@ -217,19 +217,20 @@ function createMap() {
       'manila');
 
   addCityMarker(
-      map, 34.105419, -117.706635, 'Claremont',
-      'claremont');
+      map, 34.105419, -117.706635, 'Los Angeles',
+      'losangeles');
 }
 
-/** Adds a marker that shows info in side div when clicked. */
+/** Adds a city marker that shows info in side div when clicked. */
 function addCityMarker(map, lat, lng, title, description) {
   const marker = new google.maps.Marker(
       {position: {lat: lat, lng: lng}, map: map, title: title});
-
   const infoDiv = document.getElementById(description);
+  
   marker.addListener('click', () => {
     document.getElementById("marker-click-text").style.display = "none";
     document.getElementById("newyork-map").style.display = "none";
+    document.getElementById("losangeles-map").style.display = "none";
     const markerDivs = document.getElementsByClassName("marker-info");
     for (let i = 0; i < markerDivs.length; i++) {
         markerDivs[i].style.display = "none";
@@ -254,8 +255,8 @@ function createNewyorkMap() {
       'I lived in the financial district for almost a year from 2014-2015');
 
   addLandmark(
-      map, 40.767702, -73.984881, 'Hells Kitchen',
-      'I\'ve live in Hells Kitchen since 2015');
+      map, 40.767702, -73.984881, 'Hell\'s Kitchen',
+      'I\'ve live in Hell\'s Kitchen since 2015');
 
   addLandmark(
       map, 40.718845, -74.034609, 'Tradeweb',
@@ -268,6 +269,46 @@ function createNewyorkMap() {
   addLandmark(
       map, 40.780943, -73.966083, 'The Great Lawn',
       'I love to hang out on the Great Lawn during the summer with friends');
+
+  addLandmark(
+      map, 40.741531, -73.988014, 'Shake Shack',
+      'Shake Shack - my favorite burgers in the world!');
+
+  addLandmark(
+      map, 40.734906, -73.988437, 'Irving Plaza',
+      'Irving plaza is my favorite small concert venue!');
+}
+
+/** Creates Los Angeles map with place markers. */
+function createLAMap() {
+  const map = new google.maps.Map(
+      document.getElementById('losangeles-map'),
+      {center: {lat: 33.956608, lng: -117.931550}, zoom: 9});
+  document.getElementById("losangeles-map").style.display = "block";
+
+  addLandmark(
+      map, 34.105419, -117.706635, 'Harvey Mudd College',
+      'I attend Harvey Mudd College currently.');
+
+  addLandmark(
+      map, 34.011472, -118.499552, 'Santa Monica',
+      'The famous Santa Monica Pier is my favorite place for a beach trip!');
+
+  addLandmark(
+      map, 33.958745, -118.342610, 'The Forum',
+      'The Forum is one of my favorite concert venues in LA!');
+
+  addLandmark(
+      map, 33.657268, -118.005065, 'Huntington Beach',
+      'Huntington Beach is my favorite place to watch the sunrise!');
+
+  addLandmark(
+      map, 34.071896, -117.552049, 'Ontario Mills',
+      'Ontario Mills is the outlet mall near my school with the best deals!');
+
+  addLandmark(
+      map, 33.811833, -117.919285, 'Disneyland',
+      'Disneyland! What more is there to say.');
 }
 
 /** Adds a marker that shows an info window when clicked. */
