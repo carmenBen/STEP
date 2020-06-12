@@ -125,8 +125,8 @@ function deleteComment(id) {
  * @param {number} id of comment.
  * @param {string} name on comment.
  * @param {string} comment text.
- * @param {boolean} true if current user wrote comment, and therefore should
- *     show delete comment button.
+ * @param {boolean} true if current user wrote comment, and indicating that the
+ *     'Delete Comment' button should be shown.
  * @return {Element} formatted element created from name and commentText.
  */
 function createCommentElement(id, name, commentText, showDelete) {
@@ -168,7 +168,7 @@ function createCommentElement(id, name, commentText, showDelete) {
 }
 
 /**
- * Shows comment form or login message based on whether or not user is logged
+ * Shows form to comment or login message based on whether or not user is logged
  *     in.
  */
 function displayCommentsForm() {
@@ -179,7 +179,7 @@ function displayCommentsForm() {
 }
 
 /**
- * Displays comments and comments form or login info when contact me page
+ * Displays comments or form to comment or login when contact me page
  *     loaded.
  */
 function setUpContactPage() {
@@ -188,7 +188,7 @@ function setUpContactPage() {
 }
 
 /**
- * Displays change username form.
+ * Displays form to change username.
  */
 function changeUsername() {
   fetch('/username').then(response => response.text()).then(

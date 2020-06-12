@@ -38,6 +38,8 @@ import javax.servlet.http.HttpServletResponse;
 public class CommentServlet extends HttpServlet {
     static final String NAME = "name";
     static final String TIMESTAMP = "timestamp";
+    static final String USERNAME = "username";
+    static final String EMAIL = "email";
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
@@ -73,10 +75,10 @@ public class CommentServlet extends HttpServlet {
     List<Comment> comments = new ArrayList<>();
     for (Entity entity : results.asList(FetchOptions.Builder.withLimit(maxInt))) {
       long id = entity.getKey().getId();
-      String username = (String) entity.getProperty("username");
-      String email = (String) entity.getProperty("email");
+      String username = (String) entity.getProperty(USERNAME);
+      String email = (String) entity.getProperty(EMAIL);
       String commentText = (String) entity.getProperty("commentText");
-      long timestamp = (long) entity.getProperty("timestamp");
+      long timestamp = (long) entity.getProperty(TIMESTAMP);
 
       Comment comment = new Comment(id, username, email, commentText, timestamp);
       comments.add(comment);
@@ -103,10 +105,10 @@ public class CommentServlet extends HttpServlet {
 
     // Create entity for comment.
     Entity commentEntity = new Entity("Comment");
-    commentEntity.setProperty("username", username);
-    commentEntity.setProperty("email", email);
+    commentEntity.setProperty(USERNAME, username);
+    commentEntity.setProperty(EMAIL, email);
     commentEntity.setProperty("commentText", commentText);
-    commentEntity.setProperty("timestamp", timestamp);
+    commentEntity.setProperty(TIMESTAMP, timestamp);
 
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     datastore.put(commentEntity);
@@ -115,18 +117,17 @@ public class CommentServlet extends HttpServlet {
     response.sendRedirect("/contact_me.html");
   }
 
-  /** Returns the username of the user with id, or null if the user has not set a username. */
+  /** Retrieves username from entity based on id. 
+   * @returns the username of the user with id, or null if the user has not set a username. 
+  */
   private String getUsername(String id) {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Query query =
         new Query("UserInfo")
             .setFilter(new Query.FilterPredicate("id", Query.FilterOperator.EQUAL, id));
-    PreparedQuery results = datastore.prepare(query);
-    Entity entity = results.asSingleEntity();
-    if (entity == null) {
-      return null;
-    }
-    String username = (String) entity.getProperty("username");
-    return username;
+    PreparedQuery preparedQuery = datastore.prepare(query);
+    Entity entity = preparedQuery.asSingleEntity();
+    
+    return (entity == null) ? null : (String) entity.getProperty("username");
   }
 }

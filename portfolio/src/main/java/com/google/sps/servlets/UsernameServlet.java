@@ -40,23 +40,23 @@ public class UsernameServlet extends HttpServlet {
     if (userService.isUserLoggedIn()) {
       // Display form to set username when user is logged in.
       String username = getUsername(userService.getCurrentUser().getUserId());
-      String urlToRedirectToAfterUserLogsOut = "/contact_me.html";
-      String logoutUrl = userService.createLogoutURL(urlToRedirectToAfterUserLogsOut);
+      String redirectUrlLogout = "/contact_me.html";
+      String logoutUrl = userService.createLogoutURL(redirectUrlLogout);
 
-      out.println("<h5>Set User</h5>");
-      out.println("<form method=\"POST\" action=\"/username\">");
-      out.println("<div class=\"form-group\">");
-      out.println("<label for=\"comment-text-input\">Set your username here:</label>");
-      out.println("<input type=\"text\" class=\"form-control\" name=\"username\" value=\""
-          + username + "\" />");
-      out.println("</div>");
-      out.println("<button type=\"submit\" class=\"btn btn-primary\">Submit</button>");
-      out.println("</form>");          
-      out.println("<p><br>Logout <a href=\"" + logoutUrl + "\">here</a></p>");
+      out.append("<h5>Set User</h5>")
+          .append("<form method=\"POST\" action=\"/username\">")
+          .append("<div class=\"form-group\">")
+          .append("<label for=\"comment-text-input\">Set your username here:</label>")
+          .format("<input type=\"text\" class=\"form-control\" name=\"username\" value=\"%s\" />",
+              username)
+          .append("</div>")
+          .append("<button type=\"submit\" class=\"btn btn-primary\">Submit</button>")
+          .append("</form>")
+          .format("<p><br>Logout <a href=\"%s\">here</a></p>", logoutUrl);
     } else {
       // Prompt user to login then reroute to contact me page if not logged in.
       String loginUrl = userService.createLoginURL("/contact_me.html");
-      out.println("<p>Login <a href=\"" + loginUrl + "\">here</a>.</p>");
+      out.format("<p>Login <a href=\"%s\">here</a>.</p>", loginUrl);
     }
   }
 
@@ -68,7 +68,7 @@ public class UsernameServlet extends HttpServlet {
       return;
     }
 
-    // Use posted info to add username to UserInfo entity which already has email.
+    // Add username to entity.
     String username = request.getParameter("username");
     String id = userService.getCurrentUser().getUserId();
 
@@ -81,7 +81,9 @@ public class UsernameServlet extends HttpServlet {
     response.sendRedirect("/contact_me.html");
   }
 
-  /** Returns the username of the user with id, or null if the user has not set a username. */
+  /** Retrieves username from entity based on id. 
+   * @returns the username of the user with id, or null if the user has not set a username. 
+  */
   private String getUsername(String id) {
     DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
     Query query =
@@ -89,10 +91,7 @@ public class UsernameServlet extends HttpServlet {
             .setFilter(new Query.FilterPredicate("id", Query.FilterOperator.EQUAL, id));
     PreparedQuery results = datastore.prepare(query);
     Entity entity = results.asSingleEntity();
-    if (entity == null) {
-      return null;
-    }
-    String username = (String) entity.getProperty("username");
-    return username;
+
+    return (entity == null) ? null : (String) entity.getProperty("username");
   }
 }
