@@ -39,9 +39,9 @@ public class DeleteCommentServlet extends HttpServlet {
     if (request.getParameter("id") == null){
       // Delete all comments when no comment id has been specified.
       Query query = new Query("Comment");
-      PreparedQuery results = datastore.prepare(query);
+      PreparedQuery preparedQuery = datastore.prepare(query);
 
-      for (Entity entity : results.asIterable()) {
+      for (Entity entity : preparedQuery.asIterable()) {
         Key commentEntityKey = entity.getKey();
         datastore.delete(commentEntityKey);
       }

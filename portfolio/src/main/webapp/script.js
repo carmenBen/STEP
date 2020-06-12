@@ -70,14 +70,16 @@ function getComments(maxComments = 5, sortDirection = 'latest') {
         document.getElementById('comments-list-container');
     commentsContainer.innerHTML = '';
 
-    if (commentsData.length === 0) {
+    if (commentsData.comments.length === 0) {
       commentsContainer.innerHTML = 'No comments currently. Comment now!';
     } else {
       let commentsText = '';
-      for (let i = 0; i < commentsData.length; i++) {
+      for (let i = 0; i < commentsData.comments.length; i++) {
+        const currentComment = commentsData.comments[i];
+        const showDelete = (commentsData.email === currentComment.email);
         const commentEl = 
-            createCommentElement(commentsData[i].id, commentsData[i].name,
-                commentsData[i].commentText);
+            createCommentElement(currentComment.id, currentComment.username,
+                currentComment.commentText, showDelete);
         commentsContainer.appendChild(commentEl);
       }
     }
@@ -104,7 +106,8 @@ function changeSort() {
  * Deletes all comments from datastore by calling DeleteDataServlet post.
  */
 function deleteComments() {
-  fetch('/delete-comments', {method: 'POST'}).then(window.location.reload(true));
+  fetch('/delete-comments', {method: 'POST'}).then(
+      window.location.reload(true));
   document.getElementById('comment-lists-container').remove();
 }
 
@@ -122,9 +125,11 @@ function deleteComment(id) {
  * @param {number} id of comment.
  * @param {string} name on comment.
  * @param {string} comment text.
+ * @param {boolean} true if current user wrote comment, and indicating that the
+ *     'Delete Comment' button should be shown.
  * @return {Element} formatted element created from name and commentText.
  */
-function createCommentElement(id, name, commentText) {
+function createCommentElement(id, name, commentText, showDelete) {
   const commentContainer = document.createElement('li');
   commentContainer.setAttribute('class','media mt-3');
 
@@ -143,14 +148,16 @@ function createCommentElement(id, name, commentText) {
   headerElement.setAttribute('class','mt-0 mb-1');
   divElement.appendChild(headerElement); 
 
-  const deleteButtonElement = document.createElement('button');
-  deleteButtonElement.setAttribute('class', 'btn btn-light');
-  deleteButtonElement.setAttribute('type', 'button');
-  deleteButtonElement.innerText = 'Delete Comment';
-  deleteButtonElement.addEventListener('click', () => {
-    deleteComment(id);
-  });
-  commentContainer.appendChild(deleteButtonElement);
+  if (showDelete) {
+    const deleteButtonElement = document.createElement('button');
+    deleteButtonElement.setAttribute('class', 'btn btn-light');
+    deleteButtonElement.setAttribute('type', 'button');
+    deleteButtonElement.innerText = 'Delete Comment';
+    deleteButtonElement.addEventListener('click', () => {
+      deleteComment(id);
+    });
+    commentContainer.appendChild(deleteButtonElement);
+  }
 
   nameNode = document.createTextNode(name); 
   headerElement.appendChild(nameNode);  
@@ -158,4 +165,35 @@ function createCommentElement(id, name, commentText) {
   divElement.appendChild(commentTextNode);  
 
   return commentContainer;
+}
+
+/**
+ * Shows form to comment or login message based on whether or not user is logged
+ *     in.
+ */
+function displayCommentsForm() {
+  fetch('/login').then(response => response.text()).then((loginResponse) => {
+    document.getElementById('submit-comment-container').innerHTML =
+        loginResponse;
+  });
+}
+
+/**
+ * Displays comments or form to comment or login when contact me page
+ *     loaded.
+ */
+function setUpContactPage() {
+    getComments();
+    displayCommentsForm();
+}
+
+/**
+ * Displays form to change username.
+ */
+function changeUsername() {
+  fetch('/username').then(response => response.text()).then(
+      (usernameResponse) => {
+    document.getElementById('submit-comment-container').innerHTML =
+        usernameResponse;
+  });
 }
