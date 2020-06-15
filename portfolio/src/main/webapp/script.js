@@ -12,6 +12,58 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+/** Constructs marker object. */
+function Marker(lat, lng, title, description) {
+    this.lat = lat;
+    this.lng = lng;
+    this.title = title;
+    this.description = description;
+}
+
+const SYDNEY = new Marker(-33.824032, 151.187674, 'Sydney', 'sydney');
+const NEWYORK = new Marker(40.768093, -73.981904, 'New York City', 'newyork');
+const MANILA = new Marker(14.563149, 121.036559, 'Manila', 'manila');
+const LOS_ANGLES =
+    new Marker(34.105419, -117.706635, 'Los Angeles', 'losangeles');
+
+const CITIES = [SYDNEY, NEWYORK, MANILA, LOS_ANGLES];
+
+const IRVING = new Marker(40.734906, -73.988437, 'Irving Plaza',
+      'Irving Plaza is my favorite small concert venue!');
+const SHAKE_SHACK = new Marker(40.741531, -73.988014, 'Shake Shack',
+      'Shake Shack - my favorite burgers in the world!');
+const LAWN = new Marker(40.780943, -73.966083, 'The Great Lawn',
+      'I love to hang out on the Great Lawn during the summer with friends.');
+const MSG = new Marker(40.749886, -73.993602, 'Madison Square Garden',
+      'The world famous Madison Square Garden, my favorite concert venue.');
+const TRADEWEB = new Marker(40.718845, -74.034609, 'Tradeweb',
+      'I interned at Tradeweb in the summer of 2019');
+const STUY = new Marker(40.717839, -74.013735, 'Stuyvesant High School',
+      'I attended Stuyvesant High School from 2014-2018.');
+const FIDI = new Marker(40.704545, -74.009393, 'Financial District',
+      'I lived in the financial district for almost a year from 2014-2015.');
+const HELLS_KITCHEN = new Marker(40.767702, -73.984881, 'Hell\'s Kitchen',
+      'I\'ve live in Hell\'s Kitchen since 2015.');
+
+const NEWYORK_PLACES =
+    [IRVING, SHAKE_SHACK, LAWN, MSG, TRADEWEB, STUY, FIDI, HELLS_KITCHEN];
+
+const DISNEY = new Marker(33.811833, -117.919285, 'Disneyland',
+      'Disneyland! What more is there to say.');
+const ONTARIO = new Marker(34.071896, -117.552049, 'Ontario Mills',
+      'Ontario Mills is the outlet mall near my school with the best deals!');
+const HUNTINGTON= new Marker(33.657268, -118.005065, 'Huntington Beach',
+      'Huntington Beach is my favorite place to watch the sunrise!');
+const FORUM = new Marker(33.958745, -118.342610, 'The Forum',
+      'The Forum is one of my favorite concert venues in LA!');
+const SANTA_MONICA = new Marker(34.011472, -118.499552, 'Santa Monica',
+      'The famous Santa Monica Pier is my favorite place for a beach trip!');
+const HMC = new Marker(34.105419, -117.706635, 'Harvey Mudd College',
+      'I attend Harvey Mudd College currently.');
+
+const LOSANGELES_PLACES = 
+    [DISNEY, ONTARIO, HUNTINGTON, FORUM, SANTA_MONICA, HMC];
+
 /**
  * Adds a random activity card to the page. These are descriptions and images of random quarantine activities.
  */
@@ -198,30 +250,20 @@ function changeUsername() {
   });
 }
 
-/** Create world map with city markers. */
+/** Creates world map with city markers. */
 function createMap() {
   const map = new google.maps.Map(
       document.getElementById('map'),
       {center: {lat: 25.246630, lng: 29.678410}, zoom: 1});
 
-  addCityMarker(
-      map, 40.768093, -73.981904, 'New York City',
-      'newyork');
-      
-  addCityMarker(
-      map, -33.824032, 151.187674, 'Sydney',
-      'sydney');
-
-  addCityMarker(
-      map, 14.563149, 121.036559, 'Manila',
-      'manila');
-
-  addCityMarker(
-      map, 34.105419, -117.706635, 'Los Angeles',
-      'losangeles');
+  for (city of CITIES) {
+    addCityMarker(map, city.lat, city.lng, city.title, city.description);
+  }
 }
 
-/** Adds a city marker that shows info in side div when clicked. */
+/** Adds a city marker that displays div on side with info about city when
+ *      clicked. 
+ */
 function addCityMarker(map, lat, lng, title, description) {
   const marker = new google.maps.Marker(
       {position: {lat: lat, lng: lng}, map: map, title: title});
@@ -239,80 +281,38 @@ function addCityMarker(map, lat, lng, title, description) {
   });
 }
 
-/** Creates New York map with place markers. */
+/** Creates a map of New York with markers for significant locations in my
+ *      life.
+*/
 function createNewyorkMap() {
   const map = new google.maps.Map(
       document.getElementById('newyork-map'),
       {center: {lat: 40.747345, lng: -73.988955}, zoom: 12});
   document.getElementById("newyork-map").style.display = "block";
-
-  addLandmark(
-      map, 40.717839, -74.013735, 'Stuyvesant High School',
-      'I attended Stuyvesant High School from 2014-2018');
-
-  addLandmark(
-      map, 40.704545, -74.009393, 'Financial District',
-      'I lived in the financial district for almost a year from 2014-2015');
-
-  addLandmark(
-      map, 40.767702, -73.984881, 'Hell\'s Kitchen',
-      'I\'ve live in Hell\'s Kitchen since 2015');
-
-  addLandmark(
-      map, 40.718845, -74.034609, 'Tradeweb',
-      'I interned at Tradeweb in the summer of 2019');
-
-  addLandmark(
-      map, 40.749886, -73.993602, 'Madison Square Garden',
-      'The world famous Madison Square Garden, my favorite concert venue');
-
-  addLandmark(
-      map, 40.780943, -73.966083, 'The Great Lawn',
-      'I love to hang out on the Great Lawn during the summer with friends');
-
-  addLandmark(
-      map, 40.741531, -73.988014, 'Shake Shack',
-      'Shake Shack - my favorite burgers in the world!');
-
-  addLandmark(
-      map, 40.734906, -73.988437, 'Irving Plaza',
-      'Irving plaza is my favorite small concert venue!');
+  
+  for (place of NEWYORK_PLACES) {
+    addMarkerWithInfoWindow(map, place.lat, place.lng, place.title, place.description);
+  }
 }
 
-/** Creates Los Angeles map with place markers. */
+
+/** Creates a map of Los Angeles with markers for significant locations in my
+ *      life.
+ */
 function createLAMap() {
   const map = new google.maps.Map(
       document.getElementById('losangeles-map'),
       {center: {lat: 33.956608, lng: -117.931550}, zoom: 9});
   document.getElementById("losangeles-map").style.display = "block";
-
-  addLandmark(
-      map, 34.105419, -117.706635, 'Harvey Mudd College',
-      'I attend Harvey Mudd College currently.');
-
-  addLandmark(
-      map, 34.011472, -118.499552, 'Santa Monica',
-      'The famous Santa Monica Pier is my favorite place for a beach trip!');
-
-  addLandmark(
-      map, 33.958745, -118.342610, 'The Forum',
-      'The Forum is one of my favorite concert venues in LA!');
-
-  addLandmark(
-      map, 33.657268, -118.005065, 'Huntington Beach',
-      'Huntington Beach is my favorite place to watch the sunrise!');
-
-  addLandmark(
-      map, 34.071896, -117.552049, 'Ontario Mills',
-      'Ontario Mills is the outlet mall near my school with the best deals!');
-
-  addLandmark(
-      map, 33.811833, -117.919285, 'Disneyland',
-      'Disneyland! What more is there to say.');
+  
+  for (place of LOSANGELES_PLACES) {
+    addMarkerWithInfoWindow(map, place.lat, place.lng, place.title, place.description);
+  }
 }
 
+
 /** Adds a marker that shows an info window when clicked. */
-function addLandmark(map, lat, lng, title, description) {
+function addMarkerWithInfoWindow(map, lat, lng, title, description) {
   const marker = new google.maps.Marker(
       {position: {lat: lat, lng: lng}, map: map, title: title});
 
