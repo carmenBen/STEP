@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
+import java.util.HashSet;
 
 /** Given a collection of events and a meeting request, returns a collection of Time Ranges for a
  *      possible meeting.
@@ -30,56 +32,87 @@ public final class FindMeetingQuery {
     }
 
     // Creates a list of all events that requested attendees are already attending.
-    ArrayList<Event> relevantEvents = new ArrayList();
+    ArrayList<Event> requiredEvents = new ArrayList();
+    ArrayList<Event> optionalEvents = new ArrayList();
     for (Event event : events) {
       for (String attendee : request.getAttendees()) {
         if (event.getAttendees().contains(attendee)) {
-          relevantEvents.add(event);
-          // Prevents duplicate event entry if multiple requested attendees attending same meeting.
+          requiredEvents.add(event);
+          // Prevents duplicate event entry if multiple required attendees attending same meeting.
+          break;
+        }
+      }
+      for (String attendee : request.getOptionalAttendees()) {
+        if (event.getAttendees().contains(attendee)) {
+          optionalEvents.add(event);
+          // Prevents duplicate event entry if multiple optional attendees attending same meeting.
           break;
         }
       }
     }
 
-    Collections.sort(relevantEvents, Event.ORDER_BY_START);
-    Collection<TimeRange> possibleTimes = new ArrayList();
+    Set<Event> setAllEvents = new HashSet<Event>();
+    setAllEvents.addAll(requiredEvents);
+    setAllEvents.addAll(optionalEvents);
+    ArrayList<Event> allEvents = new ArrayList<>(setAllEvents);
 
-    // Returns entire day as available if the requested participants have no existing meetings.
-    if (relevantEvents.size() == 0) {
-      return Arrays.asList(TimeRange.WHOLE_DAY);
+    Collections.sort(allEvents, Event.ORDER_BY_START);
+    Collection<TimeRange> allAttendeeTimes = getAvailableTimes(allEvents, request.getDuration());
+    if(allAttendeeTimes.size() > 0) {
+      return allAttendeeTimes;
     }
 
-    for (int i = 0; i <= relevantEvents.size(); i++) {
-      TimeRange availableTime;
-
-      if (i == 0) {
-        availableTime = TimeRange.fromStartEnd(TimeRange.START_OF_DAY,
-            getTime(relevantEvents, 0).start(), false);
-      } else if (i == relevantEvents.size()){
-        availableTime = TimeRange.fromStartEnd(getTime(relevantEvents, i - 1).end(),
-            TimeRange.END_OF_DAY, true);
-      } else {
-        availableTime = TimeRange.fromStartEnd(getTime(relevantEvents, i - 1).end(), 
-            getTime(relevantEvents, i).start(), false);
-      }
-
-      // Adds current time window to possible times if duration is long enough for event.
-      if (availableTime.duration() >= request.getDuration()) {
-        possibleTimes.add(availableTime);
-      }
-
-      // Removes next event if it is entirely contained within current event.
-      if (i+1 < relevantEvents.size() && getTime(relevantEvents, i)
-          .contains(getTime(relevantEvents, i + 1))) {
-        relevantEvents.remove(relevantEvents.get(i + 1));
-      }
+    if(request.getAttendees().size() == 0){
+      return Arrays.asList(); 
     }
 
-    return possibleTimes;
+    Collections.sort(requiredEvents, Event.ORDER_BY_START);
+    return getAvailableTimes(requiredEvents, request.getDuration());
   }
 
   /** Returns TimeRange of event duration. */
   private TimeRange getTime(ArrayList<Event> events, int index) {
     return events.get(index).getWhen();
+  }
+
+  private Collection<TimeRange> getAvailableTimes(ArrayList<Event> events, long meetingDuration) {
+    Collection<TimeRange> possibleTimes = new ArrayList();
+
+    // Returns entire day as available if the requested participants have no existing meetings.
+    if (events.size() == 0) {
+      return Arrays.asList(TimeRange.WHOLE_DAY);
+    }
+
+    for (int i = 0; i <= events.size(); i++) {
+      TimeRange availableTime;
+
+      if (i == 0) {
+        availableTime = TimeRange.fromStartEnd(TimeRange.START_OF_DAY,
+            getTime(events, 0).start(), false);
+      } else if (i == events.size()){
+        availableTime = TimeRange.fromStartEnd(getTime(events, i - 1).end(),
+            TimeRange.END_OF_DAY, true);
+      } else {
+        availableTime = TimeRange.fromStartEnd(getTime(events, i - 1).end(), 
+            getTime(events, i).start(), false);
+      }
+
+      // Adds current time window to possible times if duration is long enough for event.
+      if (availableTime.duration() >= meetingDuration) {
+        possibleTimes.add(availableTime);
+      }
+
+      // Removes next event if it is entirely contained within current event.
+      while(i+1 < events.size()) {
+        if(getTime(events, i).contains(getTime(events, i + 1))) {
+          events.remove(events.get(i + 1));
+        } else {
+          break;
+        }
+      }
+    }
+
+    return possibleTimes;
+
   }
 }
