@@ -278,9 +278,10 @@ public final class FindMeetingQueryTest {
     // Have each person have different events. We should see two options because each person has
     // split the restricted times. Ignores optional attendee with all day event.
     //
-    // Events  :       |--A--|     |--B--|
-    // Day     : |-----------------------------|
-    // Options : |--1--|     |--2--|     |--3--|
+    // Optional Events  : |--------------C--------------|
+    // Required Events  :       |--A--|     |--B--|
+    // Day              : |-----------------------------|
+    // Options          : |--1--|     |--2--|     |--3--|
 
     Collection<Event> events = Arrays.asList(
         new Event("Event 1", TimeRange.fromStartDuration(TIME_0800AM, DURATION_30_MINUTES),
@@ -306,10 +307,11 @@ public final class FindMeetingQueryTest {
   public void everyAttendeeIsConsideredInclOptionalAttendeeWithAvailability() {
     // Have each person have different events. We should see two options because each person has
     // split the restricted times.
-    //
-    // Events  :       |--A--|--C--|--B--|
-    // Day     : |-----------------------------|
-    // Options : |--1--|                 |--3--|
+    //    
+    // Optional Events  :             |--C--|
+    // Required Events  :       |--A--|     |--B--|
+    // Day              : |-----------------------------|
+    // Options          : |--1--|                 |--3--|
 
     Collection<Event> events = Arrays.asList(
         new Event("Event 1", TimeRange.fromStartDuration(TIME_0800AM, DURATION_30_MINUTES),
@@ -333,12 +335,14 @@ public final class FindMeetingQueryTest {
 
   @Test
   public void justEnoughRoomWithOptionalAttendee() {
-    // Have one person, but make it so that there is just enough room at one point in the day to
-    // have the meeting. Ignores optional attendee Person B because they block only available time.
+    // Have two people, but make it so that there is just enough room at one point in the day to
+    // have the meeting. Ignores optional attendee Person B because they are not available during
+    // only possible time.
     //
-    // Events  : |--A--|     |----A----|
-    // Day     : |---------------------|
-    // Options :       |-----|
+    // Optional Events  :       |--B--|
+    // Required Events  : |--A--|     |----A----|
+    // Day              : |---------------------|
+    // Options          :       |-----|
 
     Collection<Event> events = Arrays.asList(
         new Event("Event 1", TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TIME_0830AM, false),
@@ -362,9 +366,10 @@ public final class FindMeetingQueryTest {
   public void optionalAttendeesWithAvailableTimes() {
     // Have two optional attendees with different events. We should see three options.
     //
-    // Events  :       |--A--|     |--B--|
-    // Day     : |-----------------------------|
-    // Options : |--1--|     |--2--|     |--3--|
+    // Optional Events  :       |--A--|     |--B--|
+    // Required Events  :
+    // Day              : |-----------------------------|
+    // Options          : |--1--|     |--2--|     |--3--|
 
     Collection<Event> events = Arrays.asList(
         new Event("Event 1", TimeRange.fromStartDuration(TIME_0800AM, DURATION_30_MINUTES),
@@ -387,12 +392,13 @@ public final class FindMeetingQueryTest {
 
   @Test
   public void optionalAttendeesWithNotEnoughRoom() {
-    // Have two optional attendees, but make it so that there is not enough room at any point in
-    // the day to have the meeting.
+    // Have two optional attendees and no required attendees, but make it so that there is not
+    // enough room at any point in the day to have the meeting.
     //
-    // Events  : |--A-----| |-----B----|
-    // Day     : |---------------------|
-    // Options :
+    // Optional Events  : |--A-----| |-----B----|
+    // Required Events  :
+    // Day              : |---------------------|
+    // Options          :
 
     Collection<Event> events = Arrays.asList(
         new Event("Event 1", TimeRange.fromStartEnd(TimeRange.START_OF_DAY, TIME_0830AM, false),

@@ -22,7 +22,7 @@ import java.util.Set;
 import java.util.HashSet;
 
 /** Given a collection of events and a meeting request, returns a collection of Time Ranges for a
- *      possible meeting.
+ *      possible meeting handling cases for required and optional attendees.
  */
 public final class FindMeetingQuery {
   public Collection<TimeRange> query(Collection<Event> events, MeetingRequest request) {
@@ -31,10 +31,10 @@ public final class FindMeetingQuery {
       return Arrays.asList();
     }
 
-    // Creates a list of all events that requested attendees are already attending.
     ArrayList<Event> requiredEvents = new ArrayList();
     ArrayList<Event> optionalEvents = new ArrayList();
     for (Event event : events) {
+      // Creates a list of events that required attendees are already attending. 
       for (String attendee : request.getAttendees()) {
         if (event.getAttendees().contains(attendee)) {
           requiredEvents.add(event);
@@ -42,6 +42,7 @@ public final class FindMeetingQuery {
           break;
         }
       }
+      // Creates a list of events that optional attendees are already attending. 
       for (String attendee : request.getOptionalAttendees()) {
         if (event.getAttendees().contains(attendee)) {
           optionalEvents.add(event);
@@ -51,22 +52,27 @@ public final class FindMeetingQuery {
       }
     }
 
+    // Creates a list of events that optional and required guests are attending, no duplicates.
     Set<Event> setAllEvents = new HashSet<Event>();
     setAllEvents.addAll(requiredEvents);
     setAllEvents.addAll(optionalEvents);
     ArrayList<Event> allEvents = new ArrayList<>(setAllEvents);
 
-    Collections.sort(allEvents, Event.ORDER_BY_START);
+    // Finds all available times that optional and required guests can attend, and returns this
+    //     when there are available times.
     Collection<TimeRange> allAttendeeTimes = getAvailableTimes(allEvents, request.getDuration());
     if(allAttendeeTimes.size() > 0) {
       return allAttendeeTimes;
     }
 
+    // Returns no times when there are no available times with optional attendees and there are no
+    //     required attendees.
     if(request.getAttendees().size() == 0){
       return Arrays.asList(); 
     }
 
-    Collections.sort(requiredEvents, Event.ORDER_BY_START);
+    // Finds and returns available times for only required attendees(when optional attendees cannot
+    //     attend.
     return getAvailableTimes(requiredEvents, request.getDuration());
   }
 
@@ -75,7 +81,9 @@ public final class FindMeetingQuery {
     return events.get(index).getWhen();
   }
 
+  /** Returns available times given list of existing meetings and desired meeting duration. */
   private Collection<TimeRange> getAvailableTimes(ArrayList<Event> events, long meetingDuration) {
+    Collections.sort(events, Event.ORDER_BY_START);
     Collection<TimeRange> possibleTimes = new ArrayList();
 
     // Returns entire day as available if the requested participants have no existing meetings.
@@ -102,7 +110,7 @@ public final class FindMeetingQuery {
         possibleTimes.add(availableTime);
       }
 
-      // Removes next event if it is entirely contained within current event.
+      // Removes next event(s) if it is entirely contained within current event.
       while(i+1 < events.size()) {
         if(getTime(events, i).contains(getTime(events, i + 1))) {
           events.remove(events.get(i + 1));
@@ -113,6 +121,5 @@ public final class FindMeetingQuery {
     }
 
     return possibleTimes;
-
   }
 }
