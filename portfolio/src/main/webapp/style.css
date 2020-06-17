@@ -10,3 +10,18 @@
 .bold {
   font-weight: 450;
 }
+
+.map {
+  height: 400px;
+  width: 80%;
+}
+
+.marker-info {
+  display: none;
+}
+
+.city-map {
+  display: none;
+  height: 400px;
+  width: 80%;
+}
