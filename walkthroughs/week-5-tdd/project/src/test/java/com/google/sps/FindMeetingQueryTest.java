@@ -274,7 +274,7 @@ public final class FindMeetingQueryTest {
   }
 
   @Test
-  public void everyAttendeeIsConsideredInclOptionalAttendeeWithNoAvailability() {
+  public void allAttendeesConsideredReturnsTimesIgnoringOptionalAttendee() {
     // Have each person have different events. We should see two options because each person has
     // split the restricted times. Ignores optional attendee with all day event.
     //
@@ -304,7 +304,7 @@ public final class FindMeetingQueryTest {
   }
 
     @Test
-  public void everyAttendeeIsConsideredInclOptionalAttendeeWithAvailability() {
+  public void allAttendeesConsideredReturnsTimesIncludingOptionalAttendee() {
     // Have each person have different events. We should see two options because each person has
     // split the restricted times.
     //    
@@ -334,7 +334,8 @@ public final class FindMeetingQueryTest {
   }
 
   @Test
-  public void justEnoughRoomWithOptionalAttendee() {
+  public void requiredAttendeesWithOptionalAttendeeNotAvaibleReturnsTimeIgnoringOptionalAttendee() 
+      {
     // Have two people, but make it so that there is just enough room at one point in the day to
     // have the meeting. Ignores optional attendee Person B because they are not available during
     // only possible time.
@@ -363,7 +364,7 @@ public final class FindMeetingQueryTest {
   }
 
   @Test
-  public void optionalAttendeesWithAvailableTimes() {
+  public void optionalAttendeesWithNoRequiredAttendeesReturnsAvailableTimes() {
     // Have two optional attendees with different events. We should see three options.
     //
     // Optional Events  :       |--A--|     |--B--|
@@ -391,7 +392,7 @@ public final class FindMeetingQueryTest {
   }
 
   @Test
-  public void optionalAttendeesWithNotEnoughRoom() {
+  public void optionalAttendeesWithNotEnoughRoomReturnsNoTimes() {
     // Have two optional attendees and no required attendees, but make it so that there is not
     // enough room at any point in the day to have the meeting.
     //

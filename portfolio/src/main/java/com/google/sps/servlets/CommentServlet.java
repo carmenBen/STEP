@@ -90,7 +90,7 @@ public class CommentServlet extends HttpServlet {
     try {
       email = userService.getCurrentUser().getEmail();
     } catch(NullPointerException e) {
-        email = "";
+      email = "";
     }
 
     Gson gson = new Gson();
