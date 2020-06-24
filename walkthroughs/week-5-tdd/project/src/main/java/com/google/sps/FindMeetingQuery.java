@@ -77,12 +77,12 @@ public final class FindMeetingQuery {
     return getAvailableTimes(requiredEvents, request.getDuration());
   }
 
-  /** Return TimeRange of event duration. */
+  /** Returns TimeRange of event duration. */
   private TimeRange getTime(ArrayList<Event> events, int index) {
     return events.get(index).getWhen();
   }
 
-  /** Return available times given list of existing meetings and desired meeting duration. */
+  /** Returns available times given list of existing meetings and desired meeting duration. */
   private Collection<TimeRange> getAvailableTimes(ArrayList<Event> events, long meetingDuration) {
     Collections.sort(events, Event.ORDER_BY_START);
     Collection<TimeRange> possibleTimes = new ArrayList();
