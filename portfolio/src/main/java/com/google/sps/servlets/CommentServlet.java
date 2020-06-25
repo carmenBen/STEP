@@ -36,7 +36,7 @@ import javax.servlet.http.HttpServletResponse;
 /** Servlet that returns comments and adds comments.*/
 @WebServlet("/comments")
 public class CommentServlet extends HttpServlet {
-    static final String NAME = "name";
+    static final String NAME = "username";
     static final String TIMESTAMP = "timestamp";
     static final String USERNAME = "username";
     static final String EMAIL = "email";
@@ -85,7 +85,13 @@ public class CommentServlet extends HttpServlet {
     }
 
     UserService userService = UserServiceFactory.getUserService();
-    String email = userService.getCurrentUser().getEmail();
+    String email;
+    // Sets email to empty string when no user is currently logged in.
+    try {
+      email = userService.getCurrentUser().getEmail();
+    } catch(NullPointerException e) {
+      email = "";
+    }
 
     Gson gson = new Gson();
     response.setContentType("application/json;");
